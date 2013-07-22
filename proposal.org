@@ -1,0 +1,122 @@
+#+OPTIONS: toc:nil
+#+DATE:
+
+hbspy -  A python interface to the Hierarchical B-spline c++ library.
+
+# The outline from http://www.physics.byu.edu/undergraduate/capstone.aspx
+# breaks the proposal into 4 sections: objectives, backgrounds, strategy, and resources.
+# I will try to follow that outline here.
+* Objectives
+A physicist is interested in discovering and explaining why things are
+the way they are. This is usually done by making observations,
+isolating important variables or factors, and building models. In
+order to use and solve these models physicists need a way to represent
+them visually and/or in terms of mathematical functions. Often the
+mathematics underlying the visual design (in a CAD program, for
+instance) is fundamentally different than the mathematics used in the
+analysis of the design (called finite element analysis). This
+disparity creates extra work translating the design representation
+into a format that would be suitable for rigorous analysis. Recent
+work has been done at BYU to construct a set of tools that can be used
+both by CAD programs to represent designs and in the analysis of those
+designs. These tools are known as hierarchical B-splines (HBS) and
+they have been implemented in C++.
+
+In addition to the CAD integration possibilities for the HBS library,
+hierarchical B-splines are appealing to physicists due to various
+inherent mathematical properties:
+
+- HBS basis functions are a partition of unity and have a compact
+  support.
+- HBS curves can be made $C^{\infty}$ between knots and $C^{p-k}$ at
+  knots (p is the degree of spline, k is multiplicity of knot). In
+  this way the user can control the degree of continuity at knot
+  locations.
+- Local refinement of basis functions is possible (not generally true
+  of splines).
+- Solutions obtained using HBS curves are both accurate and smooth.
+- Geometric structure of governing PDEs can be incorporated directly
+  into the basis (for example $\nabla\cdot\mathbf{B} = 0$ in EM, or
+  $\nabla\cdot\mathbf{v} = 0$ in incompressible flow).
+
+The vision for the HBS library is that is will become the most
+powerful and flexible discretization package for engineering and
+physics. Because the library is currently written in C++, it will be
+available only to those who know that language; greatly limiting the
+potential user base. This proposal will outline a plan to lower the
+barrier to entry for using the library by creating a python interface
+to the existing C++ library.
+
+* Backgrounds
+In order to understand why the python interface is desirable, a brief
+introduction to python is appropriate. The following description of
+python is taken from their website (python.org): "Python is a
+programming language that lets you work more quickly and integrate
+your systems more effectively. You can learn to use Python and see
+almost immediate gains in productivity and lower maintenance costs."
+Python is a complete and full object oriented programming language and
+can be used in almost any programming framework. In addition, the
+scientific python community is particularly active, making python a
+natural and compelling choice for scientific or data driven work and
+research. One important thing to note is that python is an interpreted
+language. This is a two-edged sword. Being interpreted makes python
+well-suited to many tasks like rapid prototyping, simplified debugging,
+and interactive experimentation. On the other hand, it tends to be
+slower than complied languages like C or Fortran.
+
+A large amount of work has been done in the scientific python community to
+address performance issues inherent in using an interpreted
+language. Two prime examples of this are the packages numpy and
+scipy. Numpy provides python with a fast, powerful N-dimensional array
+object; optimized (broadcasting) functions; random number, linear
+algebra, and Fourier transform capabilities; and the ability to
+integrate tightly with C/C++ or Fortran code. Scipy builds on numpy by
+providing optimized routines for interpolation, linear algebra,
+optimization, integration, data io, sparse matrices, statistics,
+signal processing, and more. Much of numpy and scipy is either written
+directly in a complied language or provides a python interface to
+community standard libraries. For example, the linear algebra and
+optimization constructs in scipy are a convenient, object oriented
+wrapper around the BLAS and LAPACK Fortran libraries (similar parts of
+commercial packages like MATLAB and the NAG library are built using
+the same foundation). In addition to numpy and scipy there are various
+projects that wrap compiled code in a python interface. This combines
+the ease and accessibility of a high level, interpreted language with
+the performance and efficiency of a complied language.
+
+* Strategy
+Python provides a complete python-C API. This API is the main point of
+entry for constructing python wrappers to complied code. The downside,
+however, is that this API is quite dense and somewhat complicated. To
+ease the burden of creating this wrapper code, a few projects have
+been developed that will header files from the complied source with
+minimal user guidance to automatically generate the wrapper. Two of
+the most popular tools to do this are SWIG (simplified wrapper and
+interface generator) and boost.python. In general boost.python
+provides more low level functionality (and hence control) while SWIG
+is a bit simpler and better documented. For the purposes of this
+project I will be using SWIG.
+
+# This is about the right level of discussion
+To create the wrapper for the HBS library I will need to expose the
+interface of the core HBS classes to python. Many of these classes
+depend on a two fundamental classes: HKnotVector and HNurbs. I will
+start wrapping with those two classes and move on from there. I am
+planning on having the interface to those objects complete before May
+5th. The rest of the wrapping should be finished by July 1st. The
+biggest potential roadblock will probably be the fact that I don't
+actually know C++. This could make the testing of intermediate results
+difficult.
+
+* Resources
+Because this project is mainly programming with open source tools, I
+do not need many resources to complete it. The most important thing
+for me will be the guidance and assistance of my mentor Dr. Derek
+Thomas. He understands both the C++ code and the mathematical theory
+behind the splines. Beyond his help, I should be able to find all
+other information and resources by searching online for examples and
+tutorials. One project with similar features is the FEniCS
+project. FEniCS is another finite element package that has used SWIG
+to create a convenient and functional python interface to complied C++
+code. Their code is open source and can serve as an instructive
+example for how I might structure my wrapper.

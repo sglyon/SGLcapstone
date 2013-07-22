@@ -1,0 +1,170 @@
+%%% Preamble
+  \documentclass[12pt, twoside]{article}
+  \usepackage[T1]{fontenc}
+  \usepackage{fourier}
+  \usepackage[english]{babel}
+  \usepackage{blindtext}
+  \usepackage[protrusion=true,expansion=true]{microtype}
+  \usepackage{amsmath,amsfonts,amsthm}
+  \usepackage[pdftex]{graphicx}
+  \usepackage{url}
+  \usepackage{setspace}
+  \usepackage{vmargin}
+  \setmarginsrb {0.79in}  % left margin
+                {1.00in}   % top margin
+                {1.00in}   % right margin
+                {1.00in}  % bottom margin
+                {  20pt}   % head height
+                {0.25in}   % head sep
+                {   9pt}    % foot height
+                { 0.3in}    % foot sep
+
+  \usepackage{sectsty}
+  \allsectionsfont{\centering \normalfont\scshape}
+
+  % Bibliography
+  \usepackage{natbib}
+  \bibliographystyle{aer}
+  \setlength{\parindent}{0.25in}
+
+
+  %% Added by me
+  \usepackage{pdfpages}
+  \usepackage{booktabs}
+  \usepackage{wrapfig}
+  \usepackage{float}
+  \usepackage{pdfsync}
+  \usepackage{fancyhdr}
+  \usepackage{multicol}
+  \newcommand\ve{\varepsilon} % From Rick
+  \theoremstyle{definition} % From Rick
+  \newtheorem{definition}{Definition} % Number definitions on their own
+  \usepackage{hyperref}  % From Rick
+  \hypersetup{colorlinks,linkcolor=cyan,urlcolor=blue,citecolor=black}
+  \usepackage{colortbl}
+  \usepackage{caption}
+
+  %%% Equation and float numbering
+  \numberwithin{equation}{section}
+
+%% EVEYTHING BELOW NEEDS TO BE CHANGED!
+  %% Setup default header
+  \fancypagestyle{mainDoc}{
+      \fancyhead[L]{\slshape \rightmark}
+      \fancyhead[R]{\leftmark}
+      \fancyfoot[C]{\thepage} % no footer
+      \renewcommand{\headrulewidth}{.5pt}
+      \renewcommand{\footrulewidth}{0pt}
+      \setlength{\headheight}{13.6pt}
+  }
+
+  %%% Maketitle metadata
+  \newcommand{\horrule}[1]{\rule{\linewidth}{#1}}     % Horizontal rule
+
+  % Set title here
+  \newcommand \thetitle{hbspy -  A Python Interface to the Hierarchical B-spline C++ Library}
+
+  \title{
+    \vspace{-.6in}
+    \usefont{OT1}{bch}{b}{n}
+    \normalfont \normalsize \textsc{ } \\ [25pt]
+    \horrule{0.5pt}
+    \huge \thetitle \\
+    \horrule{2pt}
+  }
+
+  \author{
+    Spencer Lyon
+    % \thanks{}
+  }
+
+  \date{
+  \normalfont \normalsize
+  \today \\[-4pt] \normalsize
+  }
+
+  \newcommand{\TODO}[1]{ {\color{magenta} TODO: #1} }
+
+%% Title Page
+\begin{document}
+\begin{titlepage}
+% TODO: use lowercase roman numerals for frontmatter pages
+  \maketitle
+  \thispagestyle{empty}
+  \begin{center}
+
+  A senior capstone project submitted to the faculty of \\
+  Brigham Young University\\
+  in partial fulfillment of the requirements for the degree of \\[\baselineskip]
+  Bachelor of Science \\ [1.5cm]
+
+  Dr. Derek Thomas, Advisor \\ [1.5cm]
+
+  Department of Physics and Astronomy \\[\baselineskip]
+  Brigham Young University \\[\baselineskip]
+  August 2013\\[2.0cm]
+
+  Copyright \copyright\ 2013 Spencer Lyon \\[\baselineskip]
+
+  All Rights Reserved
+
+
+  % % \large{\textit{Abstract}}
+  % \begin{abstract}
+  %     \normalsize
+  %     \setstretch{1.}
+  %       This paper analyzes the age-old question of the equity premium puzzle (EPP) from the perspective of time series models. The EPP addresses the question for why demand for risky assets is so low compared to risk-free assetes when the expected returns on risky assets are so much higher. I estimate that the equity premium between 1990-2012 is between 3.4-5.2\%. I use ARIMA and GARCH models to forecast data and find that the forecasted equity premium is between 1.2-3.8\%.
+  % \end{abstract}
+  \end{center}
+  % \tableofcontents
+\end{titlepage}
+
+%% Abstract page
+  \newpage
+  \thispagestyle{empty}
+  {\centering
+  \large ABSTRACT \\ [\baselineskip]
+
+  \normalfont \normalsize
+
+  \thetitle \\ [\baselineskip]
+
+  Spencer Lyon\\
+  Department of Physics and Astronomy\\
+  Bachelor of Science \\ [\baselineskip]
+  }
+
+  % pull in actual abstract
+  \input{../abstract}
+
+  % Fill then keywords
+  \vfill
+  \noindent Keywords: python, C++, algebraic geometry, B-splines
+
+%% Contents page
+\newpage
+\tableofcontents
+
+%% Main document
+\newpage
+\pagenumbering{arabic}  % Use arabic numbers now
+\setcounter{page}{1}  % Reset page numbering
+\thispagestyle{empty}
+\pagestyle{mainDoc}
+
+\begin{center}
+\huge{\thetitle}  % Make sure the newcommand \thetitle is defined above
+\rule{\linewidth}{.1pt}
+\end{center}
+
+\setstretch{1.75}
+
+\input{../sections/intro}
+\input{../sections/methods}
+\input{../sections/results}
+\input{../sections/conclusion}
+
+\newpage
+\bibliography{../Capstone}
+
+\end{document}

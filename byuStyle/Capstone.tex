@@ -1,0 +1,65 @@
+\documentclass[Capstone,oneside]{BYUPhys}
+
+%% Preamble
+  \usepackage[english]{babel}
+  \usepackage{blindtext}
+
+%% Document Setup
+  % Your name
+    \Author{Spencer Lyon}
+
+  % For Senior and honors this is the year and month that you submit the thesis
+  % For Masters and PhD, this is your graduation date
+    \Year{2013}
+    \Month{August}
+
+  % If you have a long title, split it between multiple lines using the \\ command
+   \Title{hbspy -  A Python Interface to the Hierarchical B-spline C++ Library}
+
+  % Your research advisor
+    \Advisor{Dr. Derek C. Thomas}
+
+  % The text of your abstract
+    \Abstract{\input{../abstract}}
+
+   \Keywords{python, C++, algebraic geometry}
+
+  % Acknowledge those who helped and supported you
+    \Acknowledgments{
+      TODO: talk about Anthony, Derek, cython team
+    }
+
+\begin{document}
+
+%% Front matter
+  % Start page counting in roman numerals
+  \frontmatter
+
+  % This command makes the formal preliminary pages.
+  % You can comment it out during the drafting process if you want to save paper.
+  \makepreliminarypages
+
+  % Make the table of contents.
+  \tableofcontents
+
+% Start regular page counting at page 1
+\mainmatter
+
+% OK. Everything is set up. Type your thesis here.
+
+\input{../sections/intro}
+\input{../sections/methods}
+\input{../sections/results}
+\input{../sections/conclusion}
+
+% Start labeling chapters with letters and calling them appendices
+\appendix
+
+\section{Appendix Title} \label{sec:references}
+
+\bibliography{../Capstone}
+
+% Make the index
+ \printindex
+
+\end{document}
