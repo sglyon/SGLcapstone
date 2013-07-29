@@ -1,0 +1,61 @@
+#+TITLE:     Capstone Outline
+#+AUTHOR:    Spencer Lyon
+#+EMAIL:     spencerlyon2@gmail.com
+#+DATE:      2013-07-29 Mon
+#+DESCRIPTION:
+#+KEYWORDS:
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:
+#+LINK_HOME:
+#+XSLT:
+#+STARTUP: overview
+#+STARTUP: hidestars
+#+STARTUP: indent
+
+* Introduction
+** Background
+# This section describes "the things the reader must know to understand my work"
+** Motivation
+# This section describes "why my research problem is important?"
+With advances in computer processing power in high-level programming languages, many people aren't learning low-level, compiled languages like C/C++ or Fortran anymore. Some notable examples of higher level languages are Matlab, R, Julia, and Python. Each of these languages has its respective strengths.  Matlab is the predominant language for high-level numerical analysis and computation. R is the standard for open-source statistical programming. Julia couples a dynamic typesystem and advanced multiple dispatch paradigm with an advanced just-in-time compiler to achieve excellent performance.
+** Context
+# This section describes "what has already been done or is currently being done by others, and how will my contribution fit together with and contribute to previous efforts?"
+- FEniCS
+* Methods
+** SWIG
+
+** Boost.Python
+
+** Cython
+
+*** What is Cython?
+- Super-set of Python
+  - Adds to Python optional static typing that greatly enhances performance
+- Allows native calling of C/C++ from Python
+
+*** Cython examples
+
+** xdress
+- Document work I have done in xdress
+- Install xdress and
+
+* Results and Discussion
+- Show
+- Provide an example of how hbs works
+  - Showing both Python and C++ versions will show the importance of the Python interface
+- Explain that having a Python interface lowers the barriers to entry within the research group. Undergrads will be better able to contribute using Python than they would be if they had to work in C++
+- On a larger scale, the work done in xdress will be of greater use to anyone who uses both C/C++ and Python in their workflow
+  - Actually, xdress is written to be general enough to not be tied to Cython+Python. The typesystem and description utilities are robust tools for describing C/C++ source.
+  - Another plugin like matlabgen or juliagen would be able to use the xdress typesystem and do for Matlab and Julia what Cythongen does for Python.
+
+* Conclusion
+- Still TODO:
+  - xdress
+    - Add nested function template support.
+      - This will require a new AST parser. GCC-XML doesn't currently discover these. Three options are clang, doxygen, and SWIG. Clang and doxygen are both partially implemented and need only be updated to support all of xdress's features.
+    - Add functionality for =iostream.h=
+    -
