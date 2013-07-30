@@ -2,60 +2,203 @@
 #+AUTHOR:    Spencer Lyon
 #+EMAIL:     spencerlyon2@gmail.com
 #+DATE:      2013-07-29 Mon
-#+DESCRIPTION:
-#+KEYWORDS:
 #+LANGUAGE:  en
 #+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
 #+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
-#+EXPORT_SELECT_TAGS: export
-#+EXPORT_EXCLUDE_TAGS: noexport
-#+LINK_UP:
-#+LINK_HOME:
-#+XSLT:
 #+STARTUP: overview
 #+STARTUP: hidestars
 #+STARTUP: indent
 
 * Introduction
 ** Background
-# This section describes "the things the reader must know to understand my work"
+# This section describes "the things the reader must know to understand my
+# work"
+- HBS. Goal: become the most powerful and flexible discretization package out
+  there.
+  - IGA background
+  - Why does it matter in Physics
+- C++
+  - Properties of C++
+    - Pros
+      - Compiled.  Gives performance boost
+      - Mature. Many packages are available for many different tasks.
+    - Cons
+      - Compiled. Difficult for "outsider" to get used to build systems,
+        compiler arguments, linking libraries, ect.
+      - Requires a serious time investment to be proficient enough to make
+        meaningful contributions to large-scale problems.
+      - Verbose. Even simple tasks require a relatively large amount of code.
+- Why C++ for HBS?
+  - Compiled language performance is essential. Many problems that would need
+    HBS are large and it would be unreasonable to use non-compiled code.
+  - OOP design fits naturally with problem (rationale for C++ over C or
+    Fortran)
+  - Advanced language features like templates allow code to be very general,
+    which means it can be applied in more settings.
 ** Motivation
-# This section describes "why my research problem is important?"
-With advances in computer processing power in high-level programming languages, many people aren't learning low-level, compiled languages like C/C++ or Fortran anymore. Some notable examples of higher level languages are Matlab, R, Julia, and Python. Each of these languages has its respective strengths.  Matlab is the predominant language for high-level numerical analysis and computation. R is the standard for open-source statistical programming. Julia couples a dynamic typesystem and advanced multiple dispatch paradigm with an advanced just-in-time compiler to achieve excellent performance.
+# This section describes "why my research problem is important?". For me, this
+# section answers the question, "why python?"
+- Many new programmers and especially young scientists aren't learning
+  low-level languages like C++.
+- Other high-level languages:
+  - Matlab: predominant language for numerical analysis in many scientific
+    fields, including physics.
+  - R: The gold-standard open source statistical programming language.
+  - Julia: A new language that uses a dynamic type system, an advanced multiple
+    distpatch paradigm, and a powerful just-in-time (JIT) compiler to get
+    C-like speeds from high level code.
+  - Python: Unlike the others, Python is a complete programming language fully
+    supporting different paradigms like object-oriented, procedural,
+    functional, and imperitive programming. Used in many different settings
+    such as GUI development, database management, web development, and game
+    programming. The scientific Python community is particularly vibrant and
+    gains momentum each year.
+- Rationale for choosing python
+  - Python has long had the reputation for being a good "glue" language. The
+    core of the most common implementation of Python, CPython, is actually
+    written in C and thus boasts a native Python C-API.
+  - The most similar environment is Matlab, but Matlab comes with a hefty
+    price-tag. Python is free, open source, and runs on almost all operating
+    systems.
+  - Python is known for its very readable syntax. It is not unreasonable to
+    expect a researcher to be introduced to python in the morning and be
+    writing meaningful programs by the end of the day. (Obviously a mastery of
+    the language will develop over time, but the point of python being readable
+    and easy to learn stands.)
+  - Python is relatively easy to employ parallel processing. mpi4py exposes any
+    system implementation of the message passing interface (MPI) to python. HBS
+    is currently using MPI on C++ side to implement core algorithms in
+    parallel. Being able to use MPI from python will increase the rate of
+    development for parallel HBS.
 ** Context
-# This section describes "what has already been done or is currently being done by others, and how will my contribution fit together with and contribute to previous efforts?"
-- FEniCS
+# This section describes "what has already been done or is currently being done
+# by others, and how will my contribution fit together with and contribute to
+# previous efforts?"
+- FEniCS (Say something like "before diving into how the python interface to
+  HBS was created, I will pause to highlight projects that have done similar
+  things)
+- numpy and scipy: Excellent python packages providing the foundation for
+  scientific work in python. Many well established C and Fortran routines are
+  wrapped by these projects, among which are LAPACK, BLAS, optimization
+  routines like LBFGSB and SLSQP, and many more.
+- Slycot: Wrapper around Fortran routines (in Slicot package) for solving
+  Riccati, Lyapunov and Sylvester equations.
 * Methods
+Provide C++ snippet from hbs I can use as an example for wrapping each of
+these.cases.
 ** SWIG
-
+- Pros
+  - Well-established project
+  - Support for multiple output targets. This means you can use the same SWIG
+    files to generate bindings for many high-level languages including, but not
+    limited to Python, R, and Matlab.
+- Cons
+  - Very little control over resultant wrapper. In some sense it is an all or
+    nothing approach.
+  - Requires an additional SWIG interface file for each C++ source file.
+  - Has a C-like syntax for specifying wrapper instructions.
+- Usage example
 ** Boost.Python
-
+- Pros
+  - Some claim it has more features
+  - Very complete C++ support
+  - No bugs in the produced bindings. Either it works or it won't compile
+- Cons
+  - Difficult to install. In fact, I never even got it working.
+  - Strange =Bjam= utility for running Boost.Python. Similar to make, but with
+    a difficult syntax. Major roadblock for programmers used to using
+    high-level interpreted languages (those who will most likely care most
+    about the wrapper)
+  - Very verbose wrappers are generated. This makes it take a long time to
+    compile and python-side execution tends to suffer.
+- Usage example
 ** Cython
 
 *** What is Cython?
 - Super-set of Python
   - Adds to Python optional static typing that greatly enhances performance
-- Allows native calling of C/C++ from Python
+- Allows native calling of C/C++ from Python (even some Fortran!)
+- Gives you the ease and expressibility of python with the speed and
+  close-to-the-metal control of C
 
 *** Cython examples
 
 ** xdress
+- Pros
+  - Very easy structure for creating the wrapper. Specify functions, classes,
+    and/or variables you would like to wrap in a python file.
+  - Great flexibility over the wrapper. In addition to built-in features like
+    code filtering, inclusion of in-line documentation via dOxygen, and
+    wrapping STL objects like C++ vectors and Sets, xdress has a well-supported
+    plugin system that is very easy to use. With xdress plugins you can
+    customize and extend every aspect of what xdress does and how the wrapper
+    should be generated.
+    - I NEED TO TALK ABOUT THIS MORE. THIS IS WHAT I SPENT MOST OF MY TIME DOING.
+  - Very active development. Unlike SWIG and Boost.Python, xdress is a very
+    active project that is constantly adding new features.
+  - Sidecar files. Additional python files that can sit next to your C/C++
+    source and allow you to add additional structure or functionality to the
+    generated wrapper.
+- Cons
+  - Still relatively young. Not perfect and not all features are implemented
+  - Dependent on 3rd party AST parsers like GCC-XML and Clang.
+  - Still need to incorporate produced Cython files in build system. Not too
+    difficult, but it is an extra step.
 - Document work I have done in xdress
-- Install xdress and
+  - Second leading contributor on the project. 40+ commits that added over 3000
+    lines of code to the project.
+  - Plugins
+    - dOxygen: include in-line documentation from C++ source in standard python
+      format.
+    - descfilter: Filter out arbitrary types so they are excluded from the
+      wrapper. Can also exclude certain methods.
+  - enum support for C++. Allow xdress to wrap/expose C++ enums to python
+  - Close collaboration with main developer, Anthony Scopatz. Many features
+    have been added to xdress to handle use cases within hbs. hbspy is the main
+    project driving the direction of xdress development now. For this reason, the
+- Install xdress. See Appendix.
 
 * Results and Discussion
-- Show
 - Provide an example of how hbs works
-  - Showing both Python and C++ versions will show the importance of the Python interface
-- Explain that having a Python interface lowers the barriers to entry within the research group. Undergrads will be better able to contribute using Python than they would be if they had to work in C++
-- On a larger scale, the work done in xdress will be of greater use to anyone who uses both C/C++ and Python in their workflow
-  - Actually, xdress is written to be general enough to not be tied to Cython+Python. The typesystem and description utilities are robust tools for describing C/C++ source.
-  - Another plugin like matlabgen or juliagen would be able to use the xdress typesystem and do for Matlab and Julia what Cythongen does for Python.
+  - Showing both Python and C++ versions will show the importance of the Python
+    interface
+- Explain that having a Python interface lowers the barriers to entry within
+  the research group. Undergrads will be better able to contribute using Python
+  than they would be if they had to work in C++
+- On a larger scale, the work done in xdress will be of greater use to anyone
+  who uses both C/C++ and Python in their workflow
+  - Actually, xdress is written to be general enough to not be tied to
+    Cython+Python. The typesystem and description utilities are robust tools
+    for describing C/C++ source.
+  - Another plugin like matlabgen or juliagen would be able to use the xdress
+    typesystem and do for Matlab and Julia what Cythongen does for Python.
 
 * Conclusion
 - Still TODO:
   - xdress
-    - Add nested function template support.
-      - This will require a new AST parser. GCC-XML doesn't currently discover these. Three options are clang, doxygen, and SWIG. Clang and doxygen are both partially implemented and need only be updated to support all of xdress's features.
+    - Add nested function template support. Right now xdress can't handle a
+      templated method inside a templated class.
+      - This will require a new AST parser. GCC-XML doesn't currently discover
+        these. Three options are clang, doxygen, and SWIG. Clang and doxygen
+        are both partially implemented and need only be updated to support all
+        of xdress's features.
     - Add functionality for =iostream.h=
-    -
+  - hbspy
+    - test suites
+
+* Appendix: Python environment setup and install (Should I have this? Might be kinda nice to document)
+Give some options for environments:
+- Do it yourself
+- Enthought Canopy
+- Anaconda
+
+Recommend Anaconda and talk about how to install it.
+
+Talk about how to get xdress up and running (installing GCC-XML). Will need C
+compiler to do the actual compiling. OSX use XCode Command line tools. Windows
+grab visual studio express. Linux, you should have it, but if not use your
+package manager to grab gcc.
+
+Note that this will give you an environment good for more than just wrapping
+C/C++ code. You will get a complete, state of the art scientific analysis
+framework on top of a fully functional programming language.
