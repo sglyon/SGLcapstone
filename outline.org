@@ -99,7 +99,7 @@ these.cases.
   - Has a C-like syntax for specifying wrapper instructions.
 - Usage example
 ** Boost.Python
-- Pros
+- Pros
   - Some claim it has more features
   - Very complete C++ support
   - No bugs in the produced bindings. Either it works or it won't compile

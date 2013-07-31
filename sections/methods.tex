@@ -2,18 +2,96 @@
 
 \section{Methods} \label{sec:methods}
 
-  \subsection{SWIG} \label{sub:swig}
+In this section I describe the different approaches that were employed  during the creation of \texttt{hbspy}. I will give an overview of the tools that were used or considered for this project as well as a short usage example for each tool. To maintain consistency and make differences across the methods more apparent, I will use a selection of the code from the HBS C++ library. The main components of this example code are a C++ class \texttt{HKnotVector}, a function \texttt{numClamp}, and a few typedefs, \texttt{DoubleVec, IntVec}, and \texttt{IntVecVec}. This actual source code can be found in Appendix~\ref{app:code}.
 
-    \blindtext
+\subsection{SWIG} \label{sub:swig}
 
-  \subsection{Boost.Python} \label{sub:boost_python}
+  SWIG\footnote{SWIG is free and open source. The source code is hosted at \url{https://github.com/swig/swig} and the homepage for the project is \url{http://www.swig.org/}.} is an acronym meaning simplified wrapper and interface generator. The following excerpt from the SWIG homepage provides a good explanation of what SWIG is commonly used for:
 
-    \blindtext
+  \setstretch{1.0}
+  \begin{quote}
+    SWIG is a software development tool that connects programs written in C and C++ with a variety of high-level programming languages. SWIG is used with different types of target languages including common scripting languages such as Perl, PHP, Python, Tcl and Ruby\ldots SWIG is most commonly used to create high-level interpreted or compiled programming environments, user interfaces, and as a tool for testing and prototyping C/C++ software. SWIG is typically used to parse C/C++ interfaces and generate the 'glue code' required for the above target languages to call into the C/C++ code.
+  \end{quote}
+  \setstretch{2.0}
 
-  \subsection{Cython} \label{sub:cython}
+  \noindent  SWIG is a very well-established project; the first version appeared in July 1995 and the most recent version was released in May 2013. Over the years, SWIG has developed in to a very powerful and flexible tool. The best expression of this flexibility is that SWIG officially has at least partial support for nineteen different target languages, whereas other tools that will be discussed in this section are Python specific. A great aspect of this flexibility is that users can run SWIG on the exact same set of files and generate wrappers for different target languages by simply changing a single command line argument.
 
-    \blindtext
+  However, SWIG is not a perfect tool. Due in part to the freedom it gives users to choose amongst multiple output languages, SWIG generates wrapper code that is relatively difficult to customize for a specific target language. Furthermore, in order to use SWIG, a user must supply an additional interface file (commonly with a \texttt{.i} suffix) in which the user uses a C-like syntax to describe the desired interface. Finally, the last main drawback I noticed when testing SWIG for \texttt{hbspy} is that the building/compiling phase for SWIG is non-trivial.
 
-  \subsection{xdress} \label{sub:xdress}
+  \subsubsection{SWIG Usage Example} \label{ssub:swig_usage_example}
 
-    \blindtext
+    To give an idea of how to use SWIG, I outline how to construct a Python interface to the code contained in Appendix~\ref{app:code}. The first step is to create a SWIG interface file where the desired wrapper is designed. I will present the wrapper used to expose the class \texttt{HKnotVector}, and then explain the key components.
+
+    \setstretch{0.7}
+    \lstinputlisting[language=C++,label=code:HKVswig, caption=SWIG interface HKnotVector.i, stepnumber=1]{../code/swig/HKnotVector.i}
+    \setstretch{1.35}
+
+    \begin{itemize}
+      \item Line \texttt{1}: Declare the name of the module. In large projects the module name allows SWIG to create wrappers that don't have issues with namespace resolution.
+      \item Lines \texttt{3-5}: This is a special block that is copied and pasted, with out SWIG parsing, directly into the generated C/C++ portion of the wrapper. If there are things that need to happen for the underlying source to function, but SWIG doesn't need to know about, they go here.
+      \item Lines \texttt{7-12}: Notice the use of the \texttt{\%include} where C++ programmers are used to seeing \texttt{\#include}. This is a special SWIG statement that instructs SWIG to access the file \texttt{"std\_vector.i"} (included as part of SWIG) and give the interface access to the \texttt{vector} class from within the namespace \texttt{std}. I then then expose the typdefs found in \texttt{"common.h"} as swig \texttt{template}s.
+      \item Line \texttt{14}: The SWIG \texttt{\%import} directive is used to tell the wrapper that important items live in \texttt{common.h}, but that no wrapper code needs to be generated for that file.
+      \item Line \texttt{15}: Finally the SWIG \texttt{\%include} directive is used to include the main file \texttt{HKnotVector.h} in the generated wrapper.
+    \end{itemize}
+    \setstretch{2.0}
+
+    \noindent Although the interface file is only 15 lines, there are a lot of things going on. One thing to note about this interface is that when it is run, the entire \texttt{HKnotVector} class (really everything defined in \texttt{HKnotVector.h}) is wrapped and exposed to the target language. This could pose problems if various types, functions, or class attributes shouldn't be accessed outside of C or C++.
+
+    Using this file is a two-step process: 1) Run SWIG on the \texttt{"HKnotVector.i"} and generate the interface, 2) incorporate the generated files into a build system so that they can be \texttt{import}ed into Python. This first step is very straightforward and can be accomplished by running the following from the command line:
+
+    \setstretch{0.7}
+    \begin{lstlisting}
+      swig -c++ -python HKnotVector.i
+    \end{lstlisting}
+    \setstretch{2.0}
+
+    \noindent This command runs SWIG, tells it that the source language is C++, the target language is Python and that the interface file is \texttt{HKnotVector.i}. After running the command two files will be generated \texttt{HKnotVector\_wrap.cxx} and \texttt{hbspy.py}. Together these files files make up the wrapper of HKnotVector.
+
+    The next step is to incorporate these files into a build system so that they can be compiled in a way that the system Python can interact with them. The SWIG documentation gives a few possible methods for doing this, but the recommended solution is to let Python handle the compiling. This will ensure that the correct libraries are linked at compile time and that the version of Python directing the compilation will be able to use the objects. To do this, a \texttt{setup.py} file must be created. The interface file for \texttt{HKnotVector} appears below (Note that an explanation of key parts of the file are explained after the code is displayed).
+
+    \setstretch{0.7}
+    \lstinputlisting[language=python,label=code:SWIGsetup.py, caption=\texttt{setup.py} file for SWIG, stepnumber=1]{../code/swig/setup.py}
+    \setstretch{1.35}
+
+    \begin{itemize}
+      \item Line \texttt{6}: From the Python  \texttt{distutils} package, import the \texttt{setup} function and the \texttt{Extension} class. The \texttt{setup} function is the main driving point in this file and will direct the compilation. The \texttt{Extension} class holds all the information the \texttt{setup} function needs to compile the objects.
+      \item Lines \texttt{8-10}: Describe the HKnotVector extension. Notice the first argument given to the \texttt{Extension} constructor is \texttt{"\_hbspy"}. This argument tells the \texttt{setup} function what to name the shared object (or dynamic linking library on Windows) where the compiled wrapper will be placed. Without custom configuration, SWIG requires that this name be a leading underscore followed by the \texttt{\%module} name defined in the interface file.
+      \item Lines \texttt{12-18}: Call the \texttt{setup} function to build all the \texttt{Extension}s in the \texttt{ext\_modules} list. This is also where other metadata about the project goes.
+    \end{itemize}
+    \setstretch{2.0}
+
+    \noindent The final step in building the interface is to have python compile the wrappers. This is done on the command line with a single command:
+
+    \setstretch{0.7}
+    \begin{lstlisting}
+      python setup.py build_ext --inplace
+    \end{lstlisting}
+    \setstretch{2.0}
+
+    \noindent This command tells the system Python (whatever \texttt{python} resolves to on the user's \texttt{\$PATH}) to build the extensions outlined in \texttt{setup.py} inplace, meaning in the current working directory.
+
+    In the end, I decided not to use SWIG to create the interface to the entire HBS library. The verbose C-like interface files and the need to create a separate interface file for each source file made SWIG more difficult than necessary. In addition, the fact that all code from an exposed C++ source file is wrapped was overkill for this project. However, as can be seen from this small exercise, it is a fairly straightforward, if tedious, process to use SWIG to create a Python interface to C++ code.
+
+\subsection{Boost.Python} \label{sub:boost_python}
+
+  Boost.Python\footnote{Boost.Python is part of the free peer-reviewed Boost project. Boost can be downloaded from the main projects webstie at \url{http://www.boost.org/}. The documentation for Boost.Python can be found at \url{http://www.boost.org/doc/libs/1_54_0/libs/python/doc/index.html}.} (henceforth Boost for short) is an alternative to SWIG and is a highly specialized tool for wrapping C++ for Python use. This apparent lack of flexibility has allowed the Boost developers to provide a very natural and complete coverage of the C++ language. Some key C++ features that are supported in boost are
+
+  \begin{itemize}
+    \itemsep -.2in
+    \item References and Pointers
+    \item Efficient function overloading
+    \item C++ to Python exception translation (cuts down on \texttt{SEGFAULT}s)
+    \item Functions or methods with default and keyword arguments
+    \item Exporting C++ iterators as Python iterators
+    \item Control over Python documentation strings
+  \end{itemize}
+
+  On the other hand, Boost has some limitations. First, Boost has a difficult \texttt{Bjam} utility for compiling the wrappers. \texttt{Bjam} is similar to \texttt{make}, but has a difficult and strange syntax. Second, the generated wrapper code is generally very verbose. While is is probably do to supporting some C++ features that other wrapping tools do not, it has at least two major drawbacks: 1) It takes a long time to compile the wrappers and 2) the python-side execution is typically noticeably slower than the code generated with other tools. Finally, the major drawback and ultimate reason why I did not use Boost for \texttt{hbspy} is that it is very difficult to install. After reading the (sparse) documentation and searching the internet, I still could not get Boost.Python correctly installed and configured on my system. This would be a major roadblock to future users of the Python bindings and would actually detract from the main justification for creating the bindings: lowering the bar to entry for using HBS in research. For these reasons, I will not include a usage example for Boost.Python, but because I spend quite a bit of time on it and many people seem to like it, I felt it needed to be addressed in this report.
+
+\subsection{Cython} \label{sub:cython}
+
+  \blindtext
+
+\subsection{xdress} \label{sub:xdress}
+
+  \blindtext

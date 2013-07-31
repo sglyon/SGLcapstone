@@ -22,9 +22,13 @@
   \usepackage{sectsty}
   \allsectionsfont{\centering \normalfont\scshape}
 
+  \usepackage{tikz}
+
   % Bibliography
+  \usepackage{babel}
+  \usepackage{csquotes}
   \usepackage{biblatex}
-  \bibliographystyle{aer}
+  \addbibresource{../Capstone.bib}
   \setlength{\parindent}{0.25in}
 
 
@@ -47,6 +51,52 @@
   %%% Equation and float numbering
   \numberwithin{equation}{section}
 
+  % Set up listings
+  \usepackage{listings}
+  \usepackage{color}
+
+  \definecolor{dkgreen}{rgb}{0,0.6,0}
+  \definecolor{gray}{rgb}{0.5,0.5,0.5}
+  \definecolor{mauve}{rgb}{0.58,0,0.82}
+  \definecolor{burntorange}{rgb}{0.68,  0.53,  0.27}
+
+  \lstset{language=C++,
+            aboveskip=3mm,
+            belowskip=3mm,
+            showstringspaces=false,
+            columns=flexible,
+            frame=L,
+            basicstyle={\small\ttfamily},
+            numbers=left,
+            stepnumber=5,
+            numberstyle=\small\color{gray},
+            keywordstyle=\color{blue},
+            stringstyle=\color{burntorange},
+            commentstyle=\color{dkgreen},
+            morecomment=[l][\color{magenta}]{\#}}
+
+  \lstset{language=Python,
+            aboveskip=3mm,
+            belowskip=3mm,
+            showstringspaces=false,
+            columns=flexible,
+            frame=L,
+            basicstyle={\small\ttfamily},
+            numbers=left,
+            stepnumber=5,
+            numberstyle=\small  \color{gray},
+            keywordstyle=\color{blue},
+            stringstyle=\color{burntorange},
+            commentstyle=\color{dkgreen},
+            morecomment=[l][\color{magenta}]{\#},
+            breaklines=true,
+            breakatwhitespace=true
+            tabsize=4}
+
+\newenvironment{code}{\setstretch{0.7} \begin{lstlisting}}{\end{lstlisting} \setstretch{2.0}}
+
+
+
 %% EVEYTHING BELOW NEEDS TO BE CHANGED!
   %% Setup default header
   \fancypagestyle{mainDoc}{
@@ -55,7 +105,7 @@
       \fancyfoot[C]{\thepage} % no footer
       \renewcommand{\headrulewidth}{.5pt}
       \renewcommand{\footrulewidth}{0pt}
-      \setlength{\headheight}{13.6pt}
+      \setlength{\headheight}{15.0pt}
   }
 
   %%% Maketitle metadata
@@ -108,15 +158,7 @@
 
   All Rights Reserved
 
-
-  % % \large{\textit{Abstract}}
-  % \begin{abstract}
-  %     \normalsize
-  %     \setstretch{1.}
-  %       This paper analyzes the age-old question of the equity premium puzzle (EPP) from the perspective of time series models. The EPP addresses the question for why demand for risky assets is so low compared to risk-free assetes when the expected returns on risky assets are so much higher. I estimate that the equity premium between 1990-2012 is between 3.4-5.2\%. I use ARIMA and GARCH models to forecast data and find that the forecasted equity premium is between 1.2-3.8\%.
-  % \end{abstract}
   \end{center}
-  % \tableofcontents
 \end{titlepage}
 
 %% Abstract page
@@ -139,7 +181,7 @@
 
   % Fill then keywords
   \vfill
-  \noindent Keywords: python, C++, algebraic geometry, B-splines
+  \noindent Keywords: Python, C++, algebraic geometry, B-splines
 
 %% Contents page
   \newpage
@@ -157,7 +199,7 @@
 \rule{\linewidth}{.1pt}
 \end{center}
 
-\setstretch{1.75}
+\setstretch{2.0}
 
 \input{../sections/intro}
 \input{../sections/methods}
@@ -165,6 +207,9 @@
 \input{../sections/conclusion}
 
 \newpage
-\bibliography{../Capstone}
+\printbibliography
+
+\appendix
+\input{../sections/app_code}
 
 \end{document}
