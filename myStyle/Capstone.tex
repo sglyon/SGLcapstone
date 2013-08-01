@@ -25,10 +25,10 @@
   \usepackage{tikz}
 
   % Bibliography
-  \usepackage{babel}
-  \usepackage{csquotes}
-  \usepackage{biblatex}
-  \addbibresource{../Capstone.bib}
+  % \usepackage{babel}
+  % \usepackage{csquotes}
+  % \usepackage{biblatex}
+  % \addbibresource{../Capstone.bib}
   \setlength{\parindent}{0.25in}
 
 
@@ -68,8 +68,8 @@
             frame=L,
             basicstyle={\small\ttfamily},
             numbers=left,
-            stepnumber=5,
-            numberstyle=\small\color{gray},
+            stepnumber=1,
+            numberstyle=\tiny\color{gray},
             keywordstyle=\color{blue},
             stringstyle=\color{burntorange},
             commentstyle=\color{dkgreen},
@@ -83,8 +83,8 @@
             frame=L,
             basicstyle={\small\ttfamily},
             numbers=left,
-            stepnumber=5,
-            numberstyle=\small  \color{gray},
+            stepnumber=1,
+            numberstyle=\tiny  \color{gray},
             keywordstyle=\color{blue},
             stringstyle=\color{burntorange},
             commentstyle=\color{dkgreen},
@@ -93,7 +93,11 @@
             breakatwhitespace=true
             tabsize=4}
 
-\newenvironment{code}{\setstretch{0.7} \begin{lstlisting}}{\end{lstlisting} \setstretch{2.0}}
+  \newcommand{\mainstretch}{\setstretch{2.0}}
+
+  \newenvironment{code}{\setstretch{0.7} \begin{lstlisting}}{\end{lstlisting} \mainstretch{}}
+
+  % Set main spacing
 
 
 
@@ -199,17 +203,19 @@
 \rule{\linewidth}{.1pt}
 \end{center}
 
-\setstretch{2.0}
+\mainstretch{}
 
 \input{../sections/intro}
 \input{../sections/methods}
 \input{../sections/results}
 \input{../sections/conclusion}
 
-\newpage
-\printbibliography
+% \newpage
+% \printbibliography
 
+\newpage
 \appendix
 \input{../sections/app_code}
+\input{../sections/app_cython}
 
 \end{document}
