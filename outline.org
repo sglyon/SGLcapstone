@@ -9,14 +9,18 @@
 #+STARTUP: hidestars
 #+STARTUP: indent
 
+# overall, I like the direction.
 * Introduction
 ** Background
 # This section describes "the things the reader must know to understand my
 # work"
+- You need to define hbs (what does this mean, why are splines useful)
+- Look at the intro to the iga papers I sent for some motivation (integration with design tools, exact representation of geometry, higher order smoothness, etc.)
 - HBS. Goal: become the most powerful and flexible discretization package out
   there.
   - IGA background
   - Why does it matter in Physics
+  - Might also mention that this is to be released as a tool for others.  Python increases the possible audience.
 - C++
   - Properties of C++
     - Pros
@@ -42,7 +46,7 @@
   low-level languages like C++.
 - Other high-level languages:
   - Matlab: predominant language for numerical analysis in many scientific
-    fields, including physics.
+    fields, including physics.  I don't know that I agree with this statement
   - R: The gold-standard open source statistical programming language.
   - Julia: A new language that uses a dynamic type system, an advanced multiple
     distpatch paradigm, and a powerful just-in-time (JIT) compiler to get
@@ -99,7 +103,7 @@ these.cases.
   - Has a C-like syntax for specifying wrapper instructions.
 - Usage example
 ** Boost.Python
-- Pros
+- Pros
   - Some claim it has more features
   - Very complete C++ support
   - No bugs in the produced bindings. Either it works or it won't compile
@@ -199,6 +203,7 @@ compiler to do the actual compiling. OSX use XCode Command line tools. Windows
 grab visual studio express. Linux, you should have it, but if not use your
 package manager to grab gcc.
 
+I would move this paragraph up to your introduction and mention it throughout.
 Note that this will give you an environment good for more than just wrapping
 C/C++ code. You will get a complete, state of the art scientific analysis
 framework on top of a fully functional programming language.
