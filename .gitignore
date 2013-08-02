@@ -31,6 +31,7 @@
 *.xdy
 *.tdo
 *.fls
+*.bcf
 
 
 *.DS_Store
