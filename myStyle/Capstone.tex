@@ -25,10 +25,16 @@
   \usepackage{tikz}
 
   % Bibliography
-  % \usepackage{babel}
-  % \usepackage{csquotes}
-  % \usepackage{biblatex}
-  % \addbibresource{../Capstone.bib}
+  % \usepackage[american]{babel}
+  \usepackage[babel=true]{csquotes}
+  \usepackage[
+      backend=biber,
+      style=ieee,
+      sorting=none
+  ]{biblatex}
+  \addbibresource{Capstone.bib}
+  % \usepackage{natbib}
+  % \bibliographystyle{aer}
   \setlength{\parindent}{0.25in}
 
 
@@ -210,12 +216,14 @@
 \input{../sections/results}
 \input{../sections/conclusion}
 
-% \newpage
-% \printbibliography
+\newpage
+\printbibliography
 
 \newpage
 \appendix
 \input{../sections/app_code}
-\input{../sections/app_cython}
+
+% I have put the material from the cython appendix in the body of the report. I might want to revert at some point.
+% \input{../sections/app_cython}
 
 \end{document}

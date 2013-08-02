@@ -3,7 +3,27 @@
 
   \subsection{Background} \label{ssec:background}
 
-    \blindtext
+    A physicist is interested in discovering and explaining why things are the way they are. This is usually done by making observations, isolating important variables or factors, and building models. In order to use and solve these models physicists need a way to represent them visually and/or in terms of mathematical functions. Especially in physics, these mathematical functions are differential or difference equations with an associated set of boundary conditions.
+
+    Finite element methods (FEM) are numerical techniques for finding solutions to boundary value problems using the calculus of variations. From a high level FEM can be thought up of dividing a system in to small components (finite elements), defining the relevant equations for each component, then gathering the pieces together again for computation. Perhaps the best known application of FEM is an engineering tool known as finite element analysis (FEA). FEA works by dividing a surface into a mesh, which is often defined internally by a spline of some sort. A spline is piecewise defined polynomial function that is also smooth where the polynomials pieces come together \cite{judd1998}. Among the most common class of splines are B-splines.
+
+    % TODO: Talk about B-splines. Discuss a couple short comings. Lead up to IGA and into the paragraph below
+
+    Often the mathematics underlying the visual design (in a CAD program, for instance) is fundamentally different than the mathematics used in the analysis of the design (called finite element analysis). This disparity creates extra work translating the design representation into a format that would be suitable for rigorous analysis. Recent work has been done at BYU to construct a set of tools that can be used both by CAD programs to represent designs and in the analysis of those designs. These tools are known as hierarchical B-splines (HBS) and they have been implemented in C++.
+
+    In addition to the CAD integration possibilities for the HBS library, hierarchical B-splines are appealing to physicists due to various inherent mathematical properties:
+
+    \setstretch{1.35}
+    \begin{itemize}
+      \item HBS basis functions are a partition of unity and have a compact support.
+      \item HBS curves can be made $C^{\infty}$ between knots and $C^{p-k}$ at knots (p is the degree of spline, k is multiplicity of knot). In this way the user can control the degree of continuity at knot locations.
+      \item Local refinement of basis functions is possible (not generally true of splines).
+      \item Solutions obtained using HBS curves are both accurate and smooth.
+      \item Geometric structure of governing PDEs can be incorporated directly into the basis (for example $\nabla\cdot\mathbf{B} = 0$ in EM, or $\nabla\cdot\mathbf{v} = 0$ in incompressible flow).
+    \end{itemize}
+    \mainstretch{}
+
+    The vision for the HBS library is that is will become the most powerful and flexible discretization package for engineering and physics. Because the library is currently written in C++, it will be available only to those who know that language; greatly limiting the potential user base. This proposal will outline a plan to lower the barrier to entry for using the library by creating a python interface to the existing C++ library.
 
   \subsection{Motivation} \label{ssec:motivation}
 

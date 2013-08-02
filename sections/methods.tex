@@ -182,7 +182,7 @@ In this section I describe the different approaches that were employed  during t
     \setstretch{1.35}
 
     \begin{itemize}
-      \item \textbf{Lines 1-6} All necessary items are imported and set up. Notice that neither of the interface files are actually imported here. If a \texttt{.pxd} and a \texttt{.pyx} file are in the same directory and have the same name, then all things imported or defined in the \texttt{.pxd} are automatically available in the \texttt{.pyx} file.
+      \item \textbf{Lines 1-6} All necessary items are imported and set up. Notice that neither of the interface files are not actually imported here. If a \texttt{.pxd} and a \texttt{.pyx} file are in the same directory and have the same name, then all things imported or defined in the \texttt{.pxd} are automatically available in the \texttt{.pyx} file.
       \item \textbf{Lines 9-16} Use \texttt{cdef} to declare the class and set up a few special Cython methods. \texttt{\_\_cinit\_\_} is called immediately after the user tries to create an instance of the class and usually holds the minimial setup required to avoid  a \texttt{SEGFAULT} from null pointers. The \texttt{\_\_dealloc\_\_} method is called when the object is passed through the Python garbage collector and is implemented here to avoid memory leaks.
       \item \textbf{Lines 18-35} Here the overloaded constructor for HKnotVector is set up. Two private methods (private by convention of starting with a single underscore) are implemented to handle each the overloads. The \texttt{\_\_init\_\_} method is called after \texttt{\_\_cinit\_\_} when an \texttt{HKnotVector} instance is created and is implemented to dispatch object creation to one of the overloaded constructors.
       \item \textbf{Lines 37-53} The methods declared in \texttt{cpp\_HKnotVector.pxd} are implemented. Pretty much the only thing that needs to happen here is type checking. To do this I use \texttt{cdef} to statically declare variable types and cast objects using \texttt{< $\cdot$ >}.
@@ -199,13 +199,48 @@ In this section I describe the different approaches that were employed  during t
 
 \subsection{XDress} \label{sub:XDress}
 
-  The final tool I evaluated when creating the Python wrapper for HBS is XDress \footnote{XDress is free and open source. The source code is hosted at \url{https://github.com/XDress/XDress} and the homepage for the project is \url{http://xdress.org/}.}. XDress is a very young project that first appeared on github in April 2013. The following excerpt from the XDress provides a good introduction to XDress:
+  The final tool I evaluated when creating the Python wrapper for HBS is XDress \footnote{XDress is free and open source. The source code is hosted at \url{https://github.com/xdress/xdress} and the homepage for the project is \url{http://xdress.org/}.}. XDress is a very young project that first appeared on github in April 2013. XDress is written in pure python and is an automatic Python wrapper generator for C and C++ source. It constructs the wrapper in a three stage process.
 
-  \setstretch{1.0}
-  \begin{quote}
-    XDress is an automatic wrapper generator for C/C++ written in pure Python. Currently, xdress may generate Python bindings (via Cython) for C++ classes \& functions and in-memory wrappers for C++ standard library containers (sets, vectors, maps). In the future, other tools and bindings will be supported.
-
-   The main enabling feature of xdress is a dynamic type system that was designed with the purpose of API generation in mind.
-  \end{quote}
+  \setstretch{1.35}
+  \begin{enumerate}
+    \item External (to XDress) parsing tools are run on the source and a static xml representation of the data structures is generated. Currently, XDress uses GCC-XML\footnote{GCC-XML is free and open source. The source code is hosted at \url{https://github.com/gccxml/gccxml} and the homepage for the project is \url{http://gccxml.github.io/HTML/Index.html}.} for C++ parsing and pycparser\footnote{pycparser is free and open source. The source code is hosed at \url{https://github.com/eliben/pycparser} and the (limited) documentation is found in README.rst in the source.} for C.
+    \item The generated xml files are parsed and the C-based API is described in terms of an internal XDress typesytem. This typesystem is very dynamic and was designed from the ground up with API generation in mind. It is the main enabling feature of XDress.
+    \item XDress uses various built-in and/or user-supplied plugins to take the API stored in the typesystem and form Cython bindings.
+  \end{enumerate}
   \mainstretch{}
 
+  \subsubsection{\texttt{xdressrc.py}} \label{ssub:xdressrc}
+
+
+    Compared to the other methods discussed here, XDress is very easy to use . The main point of entry for using xdress is to call \texttt{xdress} from the command line. When this command is executed (with no extra arguments options) it will scan the current directory for a file named \texttt{xdressrc.py}. All the instructions for XDress are put into this single python file. It is easiest to understand the types of instructions that need to be in this file by example, so I present one here.
+
+    \setstretch{0.7}
+    \vspace{.2in}
+    \lstinputlisting[language=python,label=code:samplexdressrc, caption=Sample \texttt{xdresrc.py}: SWIG interface for HKnotVector]{../code/xdress/samplerc.py}
+    \setstretch{1.35}
+
+    \begin{itemize}
+      \item \textbf{Lines 1-3} Set the name of the Cython package, the output directory where the Cython wrapper will go, and the name of the directory where the C/C++ source lives.
+      \item \textbf{Lines 5-9} This is an optional step where the user can specify which plugins should be run when \texttt{xdress} is executed. All but the last plugin (\texttt{'foopack.barplug'}) are built-in plugins that come with XDress.  They perform the following functions:
+      \begin{itemize}
+        \item \texttt{'xdress.stlwrap'}: Generates wrapper a for C++ STL objects (see next bullet for more information)
+        \item \texttt{'xdress.autoall'} and \texttt{'xdress.autodescribe'}: Parse all included files and enter all objects into the typesystem
+        \item \texttt{'xdress.cythongen'}: Use the generated typesystem to actually write out the Cython files that define the wrapper
+        \item \texttt{'foopack.barplug'}: Run the user supplied plugin \texttt{barplug} found in the package \texttt{foopack}.
+      \end{itemize}
+      Note that if the \texttt{plugins} list is omitted from this file that XDress will automatically populate this list with the necessary plugins to create the Cython interface.
+      \item \textbf{Lines 9-14} Specify which STL containers to create Cython wrappers for. These wrappers will be exposed to Python via custom NumPy dtypes that do all data sharing in memory (no copying). Notice that the specifications here can take on a nested form to accomidate arbitrary complexity. Also note that non-native C/C++ types can be specified here, with the restriction that the user-defined types be mentioned in the \texttt{classes} list below (see next bullet).
+      \item \textbf{Lines 17-19}: An optional list of classes XDress should generate wrappers for. The \texttt{classes} object specified here should be a list of tuples. There are various formats for specifying the contents of each tuple, but the format used here is \texttt{('source\_name', 'source\_file', 'target\_name', 'target\_file')}. Where \texttt{source\_name} is the name of the class in C++, \texttt{source\_file} is the file where the class is defined in C++ and the \texttt{target} variants are the name and file for how and where the class should be defined in C++.
+      \item \textbf{Lines 21-23}: Optional lists of functions and variables that should be wrapped. The syntax is similar to the syntax for classes.
+    \end{itemize}
+    \mainstretch{}
+
+  \subsubsection{XDress Plugins} \label{ssub:xdress_plugins}
+
+    As can be seen, specifying the API elements that need to be wrapped is straightforward and simple. To complement this simplicity XDress has a very easy to use plugin architecture that gives users absolute control over how the wrapping is handled. The plugin system is not a mere afterthought, but build into the core of how XDress operates. All the major functionality of XDress is modularized into distinct plugins that are executed using this archtecture. This means that user-supplied plugins will be given the same precedence as built-in plugins. To demonstrate some of the possibilities for XDress plugins, I will explain two of the plugins I have written to handle issues encountered with wrapping HBS.
+
+    The first of these plugins is now a part of XDress and lives in \texttt{xdress.descfilter}. This plugin allows the user to instruct XDress to "filter out" certain API components from the generated wrapper. This can be done in one of two ways: 1) specify that functions or methods with certain types in the function signature be excluded or 2) specify that certain methods of a class should be excluded. This flexibility can be useful when there are certain functions that shouldn't be exposed to Python. This is also a useful stop-gap for data types that have not yet been implemented into the XDress type system. In Section \ref{sub:xdress_and_hbs} I will present the actual \texttt{xdressrc.py} file currently being developed for HBS, which will provide a usage example for \texttt{xdress.descfilter}.
+
+    The second plugin is also part of XDress and lives in  \texttt{xdress.doxygen}. This plugin uses dOxygen\footnote{dOxygen is a common documentation utility for C/C++ projects that gives the user the ability to have specially formatted comments in the source code become stylized documentation elements. dOxygen is free and open source. The code is hosted at \url{https://github.com/doxygen/doxygen} and the homepage for the project is \url{http://www.stack.nl/~dimitri/doxygen/}.} to output an xml version of in-line documentation contained in the C/C++ source. The plugin then parses this xml, automatically generates Python docstrings, and inserts them into the Cython wrappers. These docstrings have many uses such as to provide information on methods, classes, or functions when these objects are inspected at the Python interpreter, or to be used by a tool like Sphinx\footnote{Sphinx is a python package that can automatically create html or pdf (via latex) documentation using the reStructuredText markup language. Additionally, Sphinx can inspect docstrings and turn them into stylized documentation elements, much like dOxygen.} in conjunction with other content to produce stylized documentation.
+
+    Another important item to note is that because I got involved with XDress development at a very early stage and the HBS library utilizes a lot of advanced C++ language features, much of the recent and current development of XDress is being driven by the needs that arise in wrapping HBS. This, together with the ease and freedom XDress provides, caused me to choose XDress as the tool to use in constructing \texttt{hbspy}. As the HBS project moves forward, the relationship with the lead XDress developer, Anthony Scopatz, and the close integration between HBS and the XDress development cycle will very helpful and should ensure long-term functionality.
