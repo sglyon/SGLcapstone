@@ -1,5 +1,6 @@
 #+OPTIONS: toc:nil
 #+DATE:
+#+STARTUP: hidestart outline indent
 
 hbspy -  A python interface to the Hierarchical B-spline c++ library.
 
