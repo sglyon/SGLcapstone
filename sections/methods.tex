@@ -105,7 +105,10 @@ In this section I describe the different approaches that were employed  during t
   \mainstretch{}
   Cython accomplishes this translating by the Cython code directly to C or C++, which can then be compiled and loaded into any Python script or session. This means that blocks of code where all objects have been given static types can be written directly in C and therefore achieve almost\footnote{The almost is necessary because there is small overhead in calling the compiled routines from Python and getting the results back.} C-like performance. In addition, the ability to directly call C, C++, or Fortran makes Cython a viable option for wrapping low-level code for use in Python. I will now show examples these two features.
 
+
   \subsubsection{Cython Type Example} \label{ssub:cython_type_example}
+
+    \REVIEW{Should this section on Cython typing be in an appendix? It is useful for the wrapping example, but makes this section long.}
 
     The main point of entry for adding static types in Cython is the \texttt{cdef} keyword. This can be used before any object to assign a type to it. All C types can be used as valid \texttt{cdef} declarations: numeric types, structs, unions, pointers, ect. When using \texttt{cdef}, Cython will generate C code that does automatic type conversion between related Python and C types. The end result of code that has been properly typed using \texttt{cdef} is much faster code - sometimes faster by orders of magnitude.
 
@@ -164,6 +167,8 @@ In this section I describe the different approaches that were employed  during t
     The structure of a Cython wrapper is best understood by example, which I now show as I wrap HKnotVecter.
     % Because these files are a bit longer than the other examples, I have included then in Appendix \ref{app:cython}
     I begin with Listing \ref{code:hkxCPPpxd}, which is the file \texttt{cpp\_HKnotVector.cpp}. In this file I use the \texttt{vector} class defined in \texttt{libcpp.vector} and include the all the declarations that appear in \texttt{HKnotVector.h} (Listing \ref{code:HKnotVector} in Appendix \ref{app:code}).
+
+    \REVIEW{Should these code listings be put in an appendix? Part of me thinks yes because they are long, but the other part says no because they are central to what I have done with hbspy}
 
     \setstretch{0.7}
     \lstinputlisting[language=python, label=code:hkxCPPpxd, caption=\texttt{cpp\_HKnotVector.pxd}]{../code/cython/hbspy/cpp_HKnotVector.pxd}
