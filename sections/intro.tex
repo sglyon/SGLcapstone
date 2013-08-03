@@ -5,13 +5,36 @@
 
     A physicist is interested in discovering and explaining why things are the way they are. This is usually done by making observations, isolating important variables or factors, and building models. In order to use and solve these models physicists need a way to represent them visually and/or in terms of mathematical functions. Especially in physics, these mathematical functions are differential or difference equations with an associated set of boundary conditions.
 
-    Finite element methods (FEM) are numerical techniques for finding solutions to boundary value problems using the calculus of variations. From a high level FEM can be thought up of dividing a system in to small components (finite elements), defining the relevant equations for each component, then gathering the pieces together again for computation. Perhaps the best known application of FEM is an engineering tool known as finite element analysis (FEA). FEA works by dividing a surface into a mesh, which is often defined internally by a spline of some sort. A spline is piecewise defined polynomial function that is also smooth where the polynomials pieces come together \cite{judd1998}. Among the most common class of splines are B-splines.
+    There are many numerical techniques commonly employed to solve boundary value problems. Among them are finite difference methods (FD), finite element methods (FEM), boundary element methods (BEM), and finite volume methods (FVM). A 2-component approach common approach is taken with each of the techniques:
 
-    % TODO: Talk about B-splines. Discuss a couple short comings. Lead up to IGA and into the paragraph below
+    \setstretch{1.35}
+    \begin{enumerate}[1)]
+      \item The geometry of the problem is discretized and represented using a mesh.
+      \item One of the above methods is applied to this mesh and a solution to the model is computed.
+    \end{enumerate}
+    \mainstretch
 
-    Often the mathematics underlying the visual design (in a CAD program, for instance) is fundamentally different than the mathematics used in the analysis of the design (called finite element analysis). This disparity creates extra work translating the design representation into a format that would be suitable for rigorous analysis. Recent work has been done at BYU to construct a set of tools that can be used both by CAD programs to represent designs and in the analysis of those designs. These tools are known as hierarchical B-splines (HBS) and they have been implemented in C++.
+    Each of the discrete solution techniques mentioned above has its own strengths and weaknesses. FD methods are relatively easy to implement, but are restricted to rectilinear geometry\footnote{It is actually possible to systems with more complex geometries, but it is difficult and using another method is suggested}. FEM, BEM, and are all more flexible in how the geometry can be represented, but are typically more difficult to implement. In section \ref{ssub:splines}, I describe where this additional flexibility comes from.
 
-    In addition to the CAD integration possibilities for the HBS library, hierarchical B-splines are appealing to physicists due to various inherent mathematical properties:
+    \subsubsection{Splines} \label{ssub:splines}
+
+      \REVIEW{I am not sure this material is 100\% accurate. It was pieced together by searching the web and some old books and papers I have lying around.}
+
+      Often the mesh used in FEM, BEM, or FVM is defined using a system of splines. A spline is a smooth, piecewise defined polynomial function that is also smooth where the polynomials pieces come together \cite{judd1998}. Among the most common class of splines are B-splines. The author of a very efficient algorithm for the evaluation of B-splines, Carl de Boor, presented a theorem that states that any spline function of arbitrary degree, smoothness, and domain partition can be uniquely represented by a linear combination of B-splines of the same degree, smoothness, over the same partition \cite{deBoor2001}. This property makes B-splines a very powerful tool. For this reason. B-splines have been used in many physical applications. However, there are drawbacks to using B-splines. One such drawback is that due to how B-splines are defined, it is very difficult to get them to represent shapes that are circular or spherical. This is a limiting factor for many physical systems.
+
+      To understand how to overcome this weakness, we need a little more information on how B-splines are formed. A standard B-spline is defined using a non-decreasing vector of knots, which discretize the domain into smaller regions. Polynomial functions are then defined on each of those regions. These are called the B-spline basis functions. The final component is a set of coefficients that link the basis functions to the geometry that is to be described. Together the knots, basis functions, and coefficients determine a B-spline, which can serve and an \textbf{\textit{approximation}} of a geometry.
+
+      An abstraction of the B-spline is the non-uniform rational basis spline (NURBS). A NURBS is generalization of the standard B-spine in that the knot intervals can be non-uniform. A set of weights is then applied to the basis functions to define rational functions. This make makes them rational polynomials, instead of the regular polynomials used by B-splines. The combination of non-uniform knot intervals and the rational functions allows NURBS to exactly represent (not approximate) arbitrary geometries, including circles and spheres.
+
+    \subsubsection{Isogeometric Analysis (IGA)} \label{ssub:isogeometric_analysis_iga}
+
+      Once the geometry has been described (with a grid, NURBS or otherwise), the next step in solving a boundary value problem is to do the analysis on the discrete system. One inefficiency with standard FEM, BEM, and FVM methods is that the mathematical constructs used to represent the geometry are different than those used to do the analysis. The analysis items are given many names, such as triangular patches, square patches, tetrahedral patches, or hex patches. Any of these patches is a transformed version of the geometrical representation (i.e. NURBS). This poses at least two issues: 1) It is computationally costly to move from one representation to another and 2) transforming to an analysis suitable representation and back to the geometrical one introduces some error.
+
+      To overcome these issues, a new computational approach called isogeometric analysis (IGA) was introduced in 2005 by Hughes et al. \cite{hughes2005}. The main idea behind IGA is to use the exact same basis functions to represent the geometry \textit{and} do the analysis \cite{scott2013}. This simple idea streamlines the interaction between geometric design and rigorous analysis. IGA also provides many other benefits to the design and analysis process. FEM, BEM, and FVM can use the smooth, high-order basis functions that describe the geometry to do the computation and analysis, resulting in more accurate results. Also, BEM are usually plagued by geometric error; IGA eliminates this error.
+
+      \subsubsection{HBS} \label{ssub:hbs}
+
+        Hierarchal B-splines (HBS) are the focus of current research at BYU and bring additional improvements on top of IGA. Groups of NURBS can be organized into nested, hierarchal structures called spline trees.  The spline trees can then be collected as an unstructured, geometrically conforming arrangement called a spline forest. This forest gives IGA a number of enhancements, among which are the following:
 
     \setstretch{1.35}
     \begin{itemize}
@@ -23,15 +46,45 @@
     \end{itemize}
     \mainstretch{}
 
-    The vision for the HBS library is that is will become the most powerful and flexible discretization package for engineering and physics. Because the library is currently written in C++, it will be available only to those who know that language; greatly limiting the potential user base. This proposal will outline a plan to lower the barrier to entry for using the library by creating a python interface to the existing C++ library.
+    \subsubsection{HBS C++ Library} \label{ssub:hbs_cpp_library}
+
+    To accompany the theory behind HBS, a C++ library (HBS will henceforth refer to the C++ library) is being developed that implements these concepts. C++ was an appropriate language choice for the implementation of HBS for a number of reasons.
+
+    \setstretch{1.35}
+    \begin{itemize}
+      \item C++ is a statically typed, compiled programming language. This allows code written in C++ to be executed very fast. For the types of problems IGA and the HBS theory are usually applied to, this is an absolute must.
+      \item C++ is an object oriented programming language. This programming paradigm allows the ideas behind HBS (NURBS trees and spline forests, ect.) to be expressed in a very natural way.
+      \item C++ is a mature and has a great foothold in the scientific community. This means that there are many highly optimized and well-tested libraries available to do many different tasks.
+      \item Some advanced language features, like templates and method, function, or operator overloading, allow the code be general, but still compiled.
+    \end{itemize}
+    \mainstretch{}
+
+    On the other hand, there are some shortcomings to choosing C++ as the primary programming language for HBS.
+
+    \setstretch{1.35}
+    \begin{itemize}
+      \item Because C++ is a compiled language, quite a bit of time and effort was spent creating a robust, cross-platform build system.
+      \item  C++ is a relatively low-level language. While this does mean it can achieve great performance, it also means that the language is difficult to learn. This can be a barrier to entry for people, especially undergraduate students, who would like to contribute to the development of HBS\footnote{This is apparent in that the main developers of the library are all faculty members.}.
+      \item Also do to the low-level nature of C++, it tends to be more verbose than other languages. The amount of C++ code required to do a task is often much more than the about of Matlab or Python code required to do the same thing.
+    \end{itemize}
+    \mainstretch{}
+
+    The vision for the HBS library is that it will become the most powerful and flexible discretization package for engineering and physics. That it is implemented in C++ gives HBS the potential of being very powerful, but might also limit its user base. For that reason, the research group has decided on building an interface between the core C++ library and a higher-level language.
 
   \subsection{Motivation} \label{ssec:motivation}
 
-    \blindtext
+    There are many possible options for a high-level interface to HBS. Among the most common are Matlab, R, Julia and Python. Each of these languages has its respective strengths. Matlab is among the most popular languages for high-level numerical analysis and computation. R is the standard for open-source statistical programming. Julia couples a dynamic typesystem and advanced multiple dispatch paradigm with an advanced just-in-time compiler to achieve excellent performance for numerical programming tasks\footnote{Julia also supports native calls to C/C++ through the \texttt{ccall} method}. Python, in contrast, features a complete, state of the art scientific analysis framework build on top of a fully functional programming language.
 
-    % Paragraph about Matlab, R, Julia, Python
-    % With advances in computer processing power in high-level programming languages, many people aren't learning low-level, compiled languages like C/C++ or Fortran anymore. Some notable examples of higher level languages are Matlab, R, Julia, and Python. Each of these languages has its respective strengths.  Matlab is the predominant language for high-level numerical analysis and computation. R is the standard for open-source statistical programming. Julia couples a dynamic typesystem and advanced multiple dispatch paradigm with an advanced just-in-time compiler to achieve excellent performance for numerical programming tasks. Unlike the
+    We decided to use Python to build the interface to C++ for a number of reasons. Python has long had a reputation for being a good "glue" language. The core of the most common implementation of Python, CPython, is actually written in C and thus boasts a native Python-C API. In many ways, the environment most similar to Python is Matlab, but Matlab comes with a hefty price-tag. Python is free, open source, and runs on almost all operating systems. Python is known for its very readable syntax. It is not unreasonable to expect a researcher to be introduced to Python in the morning and be writing meaningful programs by the end of the day\footnote{Obviously a mastery of the language will develop over time, but the point of python being readable and easy to learn stands.}. In Python, it is relatively easy to employ parallel processing. The package mpi4py exposes any system implementation of the message passing interface (MPI) to python. HBS is currently using MPI on C++ side to implement core algorithms in parallel. Being able to use MPI from python will increase the rate of development for parallel HBS.
+
+    These virtues of Python language all come together into the ideal programming environment for the high-level C++ interface, which we call \texttt{hbspy}. The hope is that a robust and functional implementation of \texttt{hbspy} will assist in the larger goal of HBS becoming the go-to package for discretization by lowering the bar of entry. This will allow more researchers to use HBS to do their analysis and more students who would like to contribute to the development of HBS itself.
 
   \subsection{Context} \label{ssec:context}
 
-    \blindtext
+    \REVIEW{Do I need the paragraph below?}
+
+    The core C++ library for HBS is still being actively developed, but is at a very mature state. As of August 2, 2013 there are over 18,000 lines of actual code (excluding blank lines and comments)\footnote{This was determined using the \texttt{cloc} utility} in the library. This has provided a very stable base upon which the Python interface has been developed.
+
+    \REVIEW{Do I even need this section? I feel like the previsou section laid the ground work for \texttt{this project} well. Talking about other projects like numpy/scipy, FEniCS, ect. makes me feel that the paper loses momentum here.}
+
+    There are many other projects using Python as the lingua franca for low level code libraries.... TODO.
