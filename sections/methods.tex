@@ -2,7 +2,7 @@
 
 \section{Methods} \label{sec:methods}
 
-In this section I describe the different approaches that were employed  during the creation of \texttt{hbspy}. I will give an overview of the tools that were used or considered for this project as well as a short usage example for each tool. To maintain consistency and make differences across the methods more apparent, I will use a selection of the code from the HBS C++ library. The main components of this example code are a C++ class \texttt{HKnotVector}, a function \texttt{numClamp}, and a few typedefs, \texttt{DoubleVec, IntVec}, and \texttt{IntVecVec}. This actual source code can be found in Appendix~\ref{app:code}.
+In this section I describe the different approaches that were employed and considered during the creation of \texttt{hbspy}. I will give an overview of the tools that were used or considered for this project as well as a short usage example for each tool. To maintain consistency and make differences across the methods more apparent, I will use a selection of the code from the HBS C++ library. The main components of this example code are a C++ class \texttt{HKnotVector}, a function \texttt{numClamp}, and a few typedefs, \texttt{DoubleVec, IntVec}, and \texttt{IntVecVec}. The source code can be found in Appendix~\ref{app:code}.
 
 \subsection{SWIG} \label{sub:swig}
 
@@ -16,7 +16,7 @@ In this section I describe the different approaches that were employed  during t
 
   \noindent  SWIG is a very well-established project; the first version appeared in July 1995 and the most recent version was released in May 2013. Over the years, SWIG has developed in to a very powerful and flexible tool. The best expression of this flexibility is that SWIG officially has at least partial support for nineteen different target languages, whereas other tools that will be discussed in this section are Python specific. A great aspect of this flexibility is that users can run SWIG on the exact same set of files and generate wrappers for different target languages by simply changing a single command line argument.
 
-  However, SWIG is not a perfect tool. Due in part to the freedom it gives users to choose amongst multiple output languages, SWIG generates wrapper code that is relatively difficult to customize for a specific target language. Furthermore, in order to use SWIG, a user must supply an additional interface file (commonly with a \texttt{.i} suffix) in which the user uses a C-like syntax to describe the desired interface. Finally, the last main drawback I noticed when testing SWIG for \texttt{hbspy} is that the building/compiling phase for SWIG is non-trivial.
+  However, SWIG is not a perfect tool. Due in part to the freedom it gives users to choose amongst multiple output languages, SWIG generates wrapper code that is relatively difficult to customize for a specific target language. Furthermore, in order to use SWIG, a user must supply an additional interface file (commonly with a \texttt{.i} suffix) in which the user uses a C-like syntax to describe the desired interface. Finally, the last main drawback I noticed when testing SWIG for \texttt{hbspy} is that the building/compiling phase for SWIG is non-trivial.  \REVIEW{The python inteface is also a little funky sometimes.  Also, passing by reference and pointer are strange in SWIG (or impossible) and these are used extensively in hbs.}
 
   \subsubsection{SWIG Usage Example} \label{ssub:swig_usage_example}
 
@@ -36,7 +36,7 @@ In this section I describe the different approaches that were employed  during t
     \end{itemize}
     \mainstretch{}
 
-    \noindent Although the interface file is only 15 lines, there are a lot of things going on. One thing to note about this interface is that when it is run, the entire \texttt{HKnotVector} class (really everything defined in \texttt{HKnotVector.h}) is wrapped and exposed to the target language. This could pose problems if various types, functions, or class attributes shouldn't be accessed outside of C or C++.
+    \noindent Although the interface file is only 15 lines, there are a lot \COMMENT{a lot is very informal.  I would get rid of this throughout}of things going on. One thing to note about this interface is that when it is run, the entire \texttt{HKnotVector} class (really everything defined in \texttt{HKnotVector.h}) is wrapped and exposed to the target language. This could pose problems if various types, functions, or class attributes shouldn't be accessed outside of C or C++.
 
     Using this file is a two-step process: 1) Run SWIG on the \texttt{"HKnotVector.i"} and generate the interface, 2) incorporate the generated files into a build system so that they can be \texttt{import}ed into Python. This first step is very straightforward and can be accomplished by running the following from the command line:
 
@@ -74,10 +74,10 @@ In this section I describe the different approaches that were employed  during t
 
     \noindent This command tells the system Python (whatever \texttt{python} resolves to on the user's \texttt{\$PATH}) to build the extensions outlined in \texttt{setup.py} inplace, meaning in the current working directory.
 
-    In the end, I decided not to use SWIG to create the interface to the entire HBS library. The verbose C-like interface files and the need to create a separate interface file for each source file made SWIG more difficult than necessary. In addition, the fact that all code from an exposed C++ source file is wrapped was overkill for this project. However, as can be seen from this small exercise, it is a fairly straightforward, if tedious, process to use SWIG to create a Python interface to C++ code.
+    In the end, I decided not to use SWIG to create the interface to the entire HBS library. The verbose C-like interface files and the need to create a separate interface file for each source file made SWIG more difficult than necessary. In addition, the fact that all code from an exposed C++ source file is wrapped was overkill for this project. However, as can be seen from this small exercise, it is a fairly straightforward, if tedious, process to use SWIG to create a Python interface to C++ code.  \COMMENT{There are also some things that can't be represented in SWIG.}
 
 \subsection{Boost.Python} \label{sub:boost_python}
-
+\COMMENT{You probably don't need much more than this because you don't end up using boost.  Read over it to make sure that it's clear and correct.}
   Boost.Python\footnote{Boost.Python is part of the free peer-reviewed Boost project. Boost can be downloaded from the main projects webstie at \url{http://www.boost.org/}. The documentation for Boost.Python can be found at \url{http://www.boost.org/doc/libs/1_54_0/libs/python/doc/index.html}.} (henceforth Boost for short) is an alternative to SWIG and is a highly specialized tool for wrapping C++ for Python use. This apparent lack of flexibility has allowed the Boost developers to provide a very natural and complete coverage of the C++ language. Some key C++ features that are supported in boost are
 
   \begin{itemize}
@@ -94,21 +94,20 @@ In this section I describe the different approaches that were employed  during t
 
 \subsection{Cython} \label{sub:cython}
 
-  I now shift focus a bit and talk about a different type of tool, \texttt{Cython} \footnote{\texttt{Cython} is free and open source. The source code is hosted at \url{https://github.com/cython/cython} and the homepage for the project is \url{http://cython.org/}. } Instead of purely being a tool to wrap compiled languages for use in Python, Cython is actually a super-set of the Python language; anything that is valid Python code is also valid Cython code. However, Cython adds a few major improvements:
+  \texttt{Cython} \footnote{\texttt{Cython} is free and open source. The source code is hosted at \url{https://github.com/cython/cython} and the homepage for the project is \url{http://cython.org/}. } Instead of purely being a tool to wrap compiled languages for use in Python, Cython is actually a super-set of the Python language; anything that is valid Python code is also valid Cython code. However, Cython adds a few major improvements:
 
   \setstretch{1.35}
   \begin{itemize}
     \item Variables, functions, and classes can be given static types. This avoids much of the overhead inherent in a "duck-typed" interpreted language.
-    \item Cython programs can make direct calls to C, C++, and Fortran code. This allows the user to directly mix python low-level, high performance compiled code.
+    \item Cython programs can make direct calls to C, C++, and Fortran code. This allows the user to directly mix python with low-level, high performance compiled code.
   \end{itemize}
 
   \mainstretch{}
-  Cython accomplishes this translating by the Cython code directly to C or C++, which can then be compiled and loaded into any Python script or session. This means that blocks of code where all objects have been given static types can be written directly in C and therefore achieve almost\footnote{The almost is necessary because there is small overhead in calling the compiled routines from Python and getting the results back.} C-like performance. In addition, the ability to directly call C, C++, or Fortran makes Cython a viable option for wrapping low-level code for use in Python. I will now show examples these two features.
-
+  Cython accomplishes this translating by the Cython code directly to C or C++, which can then be compiled and loaded into any Python script or session. This means that blocks of code where all objects have been given static types can be written directly in C and therefore achieve almost\footnote{The almost is necessary because there is small overhead in calling the compiled routines from Python and getting the results back.} C-like performance. In addition, the ability to directly call C, C++, or Fortran makes Cython a viable option for wrapping low-level code for use in Python. I will now show examples of these two features.
 
   \subsubsection{Cython Type Example} \label{ssub:cython_type_example}
 
-    \REVIEW{Should this section on Cython typing be in an appendix? It is useful for the wrapping example, but makes this section long.}
+    \REVIEW{Should this section on Cython typing be in an appendix? It is useful for the wrapping example, but makes this section long.  Probably}
 
     The main point of entry for adding static types in Cython is the \texttt{cdef} keyword. This can be used before any object to assign a type to it. All C types can be used as valid \texttt{cdef} declarations: numeric types, structs, unions, pointers, ect. When using \texttt{cdef}, Cython will generate C code that does automatic type conversion between related Python and C types. The end result of code that has been properly typed using \texttt{cdef} is much faster code - sometimes faster by orders of magnitude.
 
@@ -249,3 +248,8 @@ In this section I describe the different approaches that were employed  during t
     The second plugin is also part of XDress and lives in  \texttt{xdress.doxygen}. This plugin uses dOxygen\footnote{dOxygen is a common documentation utility for C/C++ projects that gives the user the ability to have specially formatted comments in the source code become stylized documentation elements. dOxygen is free and open source. The code is hosted at \url{https://github.com/doxygen/doxygen} and the homepage for the project is \url{http://www.stack.nl/~dimitri/doxygen/}.} to output an xml version of in-line documentation contained in the C/C++ source. The plugin then parses this xml, automatically generates Python docstrings, and inserts them into the Cython wrappers. These docstrings have many uses such as to provide information on methods, classes, or functions when these objects are inspected at the Python interpreter, or to be used by a tool like Sphinx\footnote{Sphinx is a Python package that can automatically create html or pdf (via latex) documentation using the reStructuredText markup language. Additionally, Sphinx can inspect docstrings and turn them into stylized documentation elements, much like dOxygen.} in conjunction with other content to produce stylized documentation.
 
     Another important item to note is that because I got involved with XDress development at a very early stage and the HBS library utilizes a lot of advanced C++ language features, much of the recent and current development of XDress is being driven by the needs that arise in wrapping HBS. This, together with the ease and freedom XDress provides, caused me to choose XDress as the tool to use in constructing \texttt{hbspy}. As the HBS project moves forward, the relationship with the lead XDress developer, Anthony Scopatz, and the close integration between HBS and the XDress development cycle will very helpful and should ensure long-term functionality.
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../myStyle/Capstone"
+%%% End: 

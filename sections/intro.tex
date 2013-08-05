@@ -19,26 +19,26 @@
     \subsubsection{Splines} \label{ssub:splines}
 
       \REVIEW{I am not sure this material is 100\% accurate. It was pieced together by searching the web and some old books and papers I have lying around.}
-
+      \REVIEW{You need to more clearly distinguish between design (using NURBS or T-splines) and analysis (with a tet or hex mesh).  I would move more quickly to NURBS and mention that they are more or less the standard.  I would then mention that traditional num. methods all use approximations to this geometry for analysis.}
       Often the mesh used in FEM, BEM, or FVM is defined using a system of splines. A spline is a smooth, piecewise defined polynomial function that is also smooth where the polynomials pieces come together \cite{judd1998}. Among the most common class of splines are B-splines. The author of a very efficient algorithm for the evaluation of B-splines, Carl de Boor, presented a theorem that states that any spline function of arbitrary degree, smoothness, and domain partition can be uniquely represented by a linear combination of B-splines of the same degree, smoothness, over the same partition \cite{deBoor2001}. This property makes B-splines a very powerful tool. For this reason. B-splines have been used in many physical applications. However, there are drawbacks to using B-splines. One such drawback is that due to how B-splines are defined, it is very difficult to get them to represent shapes that are circular or spherical. This is a limiting factor for many physical systems.
 
       To understand how to overcome this weakness, we need a little more information on how B-splines are formed. A standard B-spline is defined using a non-decreasing vector of knots, which discretize the domain into smaller regions. Polynomial functions are then defined on each of those regions. These are called the B-spline basis functions. The final component is a set of coefficients that link the basis functions to the geometry that is to be described. Together the knots, basis functions, and coefficients determine a B-spline, which can serve and an \textbf{\textit{approximation}} of a geometry.
 
-      An abstraction of the B-spline is the non-uniform rational basis spline (NURBS). A NURBS is generalization of the standard B-spine in that the knot intervals can be non-uniform. A set of weights is then applied to the basis functions to define rational functions. This make makes them rational polynomials, instead of the regular polynomials used by B-splines. The combination of non-uniform knot intervals and the rational functions allows NURBS to exactly represent (not approximate) arbitrary geometries, including circles and spheres.
+      A generalization of the B-spline is the non-uniform rational basis spline (NURBS). A NURBS is generalization of the standard B-spine in that the knot intervals can be non-uniform. A set of weights is then applied to the basis functions to define rational functions. This make makes them rational polynomials, instead of the regular polynomials used by B-splines. The combination of non-uniform knot intervals and the rational functions allows NURBS to exactly represent (not approximate) arbitrary geometries, including circles and spheres.
 
     \subsubsection{Isogeometric Analysis (IGA)} \label{ssub:isogeometric_analysis_iga}
 
-      Once the geometry has been described (with a grid, NURBS or otherwise), the next step in solving a boundary value problem is to do the analysis on the discrete system. One inefficiency with standard FEM, BEM, and FVM methods is that the mathematical constructs used to represent the geometry are different than those used to do the analysis. The analysis items are given many names, such as triangular patches, square patches, tetrahedral patches, or hex patches. Any of these patches is a transformed version of the geometrical representation (i.e. NURBS). This poses at least two issues: 1) It is computationally costly to move from one representation to another and 2) transforming to an analysis suitable representation and back to the geometrical one introduces some error.
-
-      To overcome these issues, a new computational approach called isogeometric analysis (IGA) was introduced in 2005 by Hughes et al. \cite{hughes2005}. The main idea behind IGA is to use the exact same basis functions to represent the geometry \textit{and} do the analysis \cite{scott2013}. This simple idea streamlines the interaction between geometric design and rigorous analysis. IGA also provides many other benefits to the design and analysis process. FEM, BEM, and FVM can use the smooth, high-order basis functions that describe the geometry to do the computation and analysis, resulting in more accurate results. Also, BEM are usually plagued by geometric error; IGA eliminates this error.
+      Once the geometry has been described (with a grid, NURBS or otherwise), the next step in solving a boundary value problem is to perform the analysis on the discrete system. One inefficiency with standard FEM, BEM, and FVM methods is that the mathematical constructs used to represent the geometry are different than those used to perform the analysis. The analysis items are given many names, such as triangular patches, square patches, tetrahedral patches, or hex patches. Any of these patches is a transformed version of the geometrical representation (i.e. NURBS). This poses at least two issues: 1) It is computationally costly to move from one representation to another and 2) transforming to an analysis suitable representation and back to the geometrical one introduces some error.
+\REVIEW{There is also a significan amount of labor involved in the conversion between analysis and design geometries (CUBIT at Sandia is a long-term effort to provide semi-automated tools).}
+      To overcome these issues, a new computational approach called isogeometric analysis (IGA) was introduced in 2005 by Hughes et al. \cite{hughes2005}. The main idea behind IGA is to use the exact same basis functions to represent the geometry \textit{and} do the analysis \cite{scott2013}. This simple idea streamlines the interaction between geometric design and rigorous analysis. IGA also provides many other benefits to the design and analysis process. FEM, BEM, and FVM \REVIEW{We don't really touch FVM right now.  We're working on something better :).} can use the smooth, high-order basis functions that describe the geometry to perform the computation and analysis, resulting in more accurate results. Also, BEM are usually plagued by geometric error; IGA eliminates this error. \REVIEW{This seems like an orphaned thought.}
 
       \subsubsection{HBS} \label{ssub:hbs}
 
-        Hierarchal B-splines (HBS) are the focus of current research at BYU and bring additional improvements on top of IGA. Groups of NURBS can be organized into nested, hierarchal structures called spline trees.  The spline trees can then be collected as an unstructured, geometrically conforming arrangement called a spline forest. This forest gives IGA a number of enhancements, among which are the following:
+        Hierarchal B-splines (HBS) \REVIEW{(we're moving more to spline forests as the descriptive term)} are the focus of current research at BYU and bring additional improvements on top of IGA. Groups of NURBS can be organized into nested, hierarchal structures called spline trees.  The spline trees can then be collected as an unstructured, geometrically conforming arrangement called a spline forest. This forest gives IGA a number of enhancements, among which are the following:
 
     \setstretch{1.35}
     \begin{itemize}
-      \item HBS basis functions are a partition of unity and have a compact support.
+      \item HBS basis functions have compact support and can be made into a partition of unity.
       \item HBS curves can be made $C^{\infty}$ between knots and $C^{p-k}$ at knots (p is the degree of spline, k is multiplicity of knot). In this way the user can control the degree of continuity at knot locations.
       \item Local refinement of basis functions is possible (not generally true of splines).
       \item Solutions obtained using HBS curves are both accurate and smooth.
@@ -48,7 +48,7 @@
 
     \subsubsection{HBS C++ Library} \label{ssub:hbs_cpp_library}
 
-    To accompany the theory behind HBS, a C++ library (HBS will henceforth refer to the C++ library) is being developed that implements these concepts. C++ was an appropriate language choice for the implementation of HBS for a number of reasons.
+    To accompany the theory behind HBS, a C++ library (HBS \REVIEW{I would use \texttt{hbs} instead of caps} will henceforth refer to the C++ library) is being developed that implements these concepts. C++ was an appropriate language choice for the implementation of HBS for a number of reasons:
 
     \setstretch{1.35}
     \begin{itemize}
@@ -59,7 +59,7 @@
     \end{itemize}
     \mainstretch{}
 
-    On the other hand, there are some shortcomings to choosing C++ as the primary programming language for HBS.
+    On the other hand, there are some shortcomings to choosing C++ as the primary programming language for HBS:
 
     \setstretch{1.35}
     \begin{itemize}
@@ -75,16 +75,21 @@
 
     There are many possible options for a high-level interface to HBS. Among the most common are Matlab, R, Julia and Python. Each of these languages has its respective strengths. Matlab is among the most popular languages for high-level numerical analysis and computation. R is the standard for open-source statistical programming. Julia couples a dynamic typesystem and advanced multiple dispatch paradigm with an advanced just-in-time compiler to achieve excellent performance for numerical programming tasks\footnote{Julia also supports native calls to C/C++ through the \texttt{ccall} method}. Python, in contrast, features a complete, state of the art scientific analysis framework build on top of a fully functional programming language.
 
-    We decided to use Python to build the interface to C++ for a number of reasons. Python has long had a reputation for being a good "glue" language. The core of the most common implementation of Python, CPython, is actually written in C and thus boasts a native Python-C API. In many ways, the environment most similar to Python is Matlab, but Matlab comes with a hefty price-tag. Python is free, open source, and runs on almost all operating systems. Python is known for its very readable syntax. It is not unreasonable to expect a researcher to be introduced to Python in the morning and be writing meaningful programs by the end of the day\footnote{Obviously a mastery of the language will develop over time, but the point of python being readable and easy to learn stands.}. In Python, it is relatively easy to employ parallel processing. The package mpi4py exposes any system implementation of the message passing interface (MPI) to python. HBS is currently using MPI on C++ side to implement core algorithms in parallel. Being able to use MPI from python will increase the rate of development for parallel HBS.
+    We decided to use Python to build the interface to C++ for a number of reasons. Python has long had a reputation for being a good "glue" language. The core of the most common implementation of Python, CPython, is actually written in C and thus boasts a native Python-C API. In many ways, the environment most similar to Python is Matlab, but Matlab comes with a hefty price-tag. Python is free, open source, and runs on almost all operating systems. Python is known for its very readable syntax. It is not unreasonable to expect a researcher to be introduced to Python in the morning and be writing meaningful programs by the end of the day\footnote{Obviously a mastery of the language will develop over time, but the point of Python being readable and easy to learn stands.}. In Python, it is relatively easy to employ parallel processing. The package mpi4py exposes any system implementation of the message passing interface (MPI) to python. HBS is currently using MPI to implement core algorithms in parallel. Being able to use MPI from python will help increase the rate of development for parallel HBS.
 
     These virtues of Python language all come together into the ideal programming environment for the high-level C++ interface, which we call \texttt{hbspy}. The hope is that a robust and functional implementation of \texttt{hbspy} will assist in the larger goal of HBS becoming the go-to package for discretization by lowering the bar of entry. This will allow more researchers to use HBS to do their analysis and more students who would like to contribute to the development of HBS itself.
 
   \subsection{Context} \label{ssec:context}
 
     \REVIEW{Do I need the paragraph below?}
-
+    \REVIEW{It seems reasonable.  You might move this to the previous section.  You sold it pretty well there.}
     The core C++ library for HBS is still being actively developed, but is at a very mature state. As of August 2, 2013 there are over 18,000 lines of actual code (excluding blank lines and comments)\footnote{This was determined using the \texttt{cloc} utility} in the library. This has provided a very stable base upon which the Python interface has been developed.
 
     \REVIEW{Do I even need this section? I feel like the previsou section laid the ground work for \texttt{this project} well. Talking about other projects like numpy/scipy, FEniCS, ect. makes me feel that the paper loses momentum here.}
 
     There are many other projects using Python as the lingua franca for low level code libraries.... TODO.
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../myStyle/Capstone"
+%%% End: 

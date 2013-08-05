@@ -53,6 +53,7 @@
   \hypersetup{colorlinks,linkcolor=cyan,urlcolor=blue,citecolor=black}
   \usepackage{colortbl}
   \usepackage{caption}
+  \usepackage{pdfcomment}
   \usepackage[shortlabels]{enumitem}
 
   %%% Equation and float numbering
@@ -105,6 +106,8 @@
   \newcommand{\TODO}[1]{ {\color{magenta} TODO: #1} }
 
   \newcommand{\REVIEW}[1]{ {\color{red} REVIEW: #1} }
+
+  \newcommand{\COMMENT}[1]{ {\pdfcomment{#1}} }
 
   \newenvironment{code}{\setstretch{0.7} \begin{lstlisting}}{\end{lstlisting} \mainstretch{}}
 
@@ -230,3 +233,8 @@
 % \input{../sections/app_cython}
 
 \end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
