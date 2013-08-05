@@ -1,11 +1,38 @@
 %!TEX root = ../myStyle/Capstone.tex
-\section{Cython Wrapper Code Listings} \label{app:cython}
+  \section{Cython Type Example} \label{app:cython_type_example}
+    The main point of entry for adding static types in Cython is the \texttt{cdef} keyword. This can be used before any object to assign a type to it. All C types can be used as valid \texttt{cdef} declarations: numeric types, structs, unions, pointers, ect. In addition, many Python types like \texttt{list} or \texttt{dict} have been optimized to get performance gains when \texttt{cdef} is used to declare their type. When using \texttt{cdef}, Cython will generate C code that does automatic type conversion between related Python and C types. The end result of code that has been properly typed using \texttt{cdef} is much faster code - sometimes faster by orders of magnitude.
 
-Here I present sample interface files for using Cython to wrap HKnotVector.  These files are referenced in Section ~\ref{ssub:cython_wrapping_example}.
+    To demonstrate the use of the \texttt{cdef} keyword I will show Python and Cython versions of a pairwise-distance function. This function takes in an $n \times m$ matrix that represents $n$ points in $m$ dimensions and it will return an $n \times n$ matrix containing the Euclidean distance between each point in the input array and every other point in that array. I show Python and Cython versions below and then explain the differences:
 
-  \setstretch{0.7}
-  % \lstinputlisting[language=python, label=code:hkxCPPpxd, caption=\texttt{cpp\_HKnotVector.pxd}]{../code/cython/hsfpy/cpp_HKnotVector.pxd}
-  % \lstinputlisting[language=python, label=code:hkvpxd, caption=\texttt{HKnotVector.pxd}]{../code/cython/hsfpy/HKnotVector.pxd}
-  % \lstinputlisting[language=python, label=code:hkvpyx, caption=\texttt{HKnotVector.pyx}]{../code/cython/hsfpy/HKnotVector.pyx}
-  % \lstinputlisting[language=python, label=code:cySetup, caption=\texttt{setup.py} for Cython wrapper of HKnotVector]{../code/cython/hkv_setup.py}
-  \mainstretch{}
+    \setstretch{0.7}
+    \vspace{.2in}
+    \lstinputlisting[language=python,label=code:pyDist, caption= \texttt{pairs.py}: Pure Python pairwise distance function]{../code/cython/pairs.py}
+    \lstinputlisting[language=python,label=code:cyDist, caption=\texttt{cy\_pairs.pyx}: Cython pairwise distance function]{../code/cython/cy_pairs.pyx}
+    \setstretch{1.35}
+
+    \begin{itemize}
+      \item \textbf{Line 1} Cython exposes the much of the C standard library via \texttt{libc.<headerName>}. The \texttt{sqrt} function from the standard library is a bit faster than the one from Python's built-in \texttt{math} package. Note that I must use the Cython keyword \texttt{cimport} to access this function.
+      \item \textbf{Line 5} Notice the use of the keyword \texttt{cpdef}. This keyword is used to define functions or classes that need to be callable from both Python and C. Were I to have used \texttt{cdef} here, the function would be translated to a C function and I would not be able to call it from Python. Behind the scenes \texttt{cpdef} instructs the Cython to C translator to make two versions of the function: one for Python use and the other for C use.
+      \item \textbf{Line 5} Also note that on line 5 I declare a Cython typed memoryview using \texttt{double[:, ::1]}. This statement tells Cython that \texttt{x} will be a two dimensional array of doubles. In addition, the \texttt{::1} in the second position tells Cython that \texttt{x} will be C-contiguous\footnote{Note that by default all numpy arrays are C-contiguous.}. This allows the generated C code to use natural C array operations on \texttt{x}.
+      \item \textbf{Lines 6-10} Here I give static types to all variables local to the function. Note the use of the typed memory view again on line 8. Also note that Cython requires types to be declared at the top level of a function. For that reason, I declared \texttt{d} and \texttt{tmp} as double and \texttt{i, j, k} as int before entering first \texttt{for} loop.
+      \item The rest of the function is identical to the pure Python version.
+    \end{itemize}
+
+    \mainstretch{}
+    \noindent In order to use the Cython version of the function, we must instruct Cython to translate it to C and then compile it for Python use. There are many ways to do this, but as with SWIG it is easiest to let Python handle it for us using a \texttt{setup.py} file. A setup.py file for this function appears below:
+
+    \setstretch{0.7}
+    \vspace{.2in}
+    \lstinputlisting[language=python,label=code:Cythonsetup.py, caption=\texttt{setup.py} file for Cython pairwise distance ]{../code/cython/dist_setup.py}
+    \mainstretch{}
+
+    \noindent This file is very simple: lines 1 and 2 import the \texttt{setup} and \texttt{cythonize} functions and line 4 calls the \texttt{setup} function where the extension modules are given using the \texttt{cythonize} function. The only remaining step is to build the extension using the command used to build the SWIG extension above. I repeat the command here:
+
+    \setstretch{0.7}
+    \vspace{.2in}
+    \begin{lstlisting}[numbers=none]
+      python setup.py build_ext --inplace
+    \end{lstlisting}
+    \mainstretch{}
+
+    \noindent I timed both of these functions using \texttt{x = np.random.randn(1500, 5)} as the input array. Both functions returned the exact same answer, but the execution time was very different. The Python function took 21.2 seconds to execute, whereas the Cython version only took 75.6 milliseconds: a speedup of over $280x$ \footnote{I also have a more optimized version of the Cython code that only takes 14.9 milliseconds to run. While that shows a speed improvement of over 1400x, it makes use of some advanced Cython features that are beyond the scope of this report.}!
