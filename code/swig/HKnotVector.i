@@ -1,4 +1,4 @@
-%module hbspy
+%module hsfpy
 
 %{
 #include "../HKnotVector.h"

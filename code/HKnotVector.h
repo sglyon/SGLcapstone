@@ -8,7 +8,7 @@
 using namespace std;
 using namespace util;
 
-namespace hbs
+namespace hsf
 {
   class HKnotVector
   {

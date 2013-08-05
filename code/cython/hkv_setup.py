@@ -5,14 +5,14 @@ import numpy as np
 
 incdirs = ['..', '.', np.get_include()]
 
-HKnotVector = Extension("hbspy.HKnotVector",
-                        ["hbspy/HKnotVector.pyx"],
+HKnotVector = Extension("hsfpypy.HKnotVector",
+                        ["hsfpypy/HKnotVector.pyx"],
                         include_dirs=incdirs, language="c++")
 
 ext_modules = [HKnotVector]
 
-setup(name='hbspy',
+setup(name='hsfpypy',
       cmdclass={'build_ext': build_ext},
       ext_modules=ext_modules,
-      packages=['hbspy']
+      packages=['hsfpypy']
       )

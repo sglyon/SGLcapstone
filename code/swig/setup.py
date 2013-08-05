@@ -1,18 +1,18 @@
 #!/usr/bin/env python
 """
-setup.py file for building SWIG hbs extensions
+setup.py file for building SWIG hsfpy extensions
 """
 
 from distutils.core import setup, Extension
 
-h_knot_vector = Extension('_hbspy',
+h_knot_vector = Extension('_hsfpypy',
                           sources=['./HKnotVector_wrap.cxx']
                           )
 
-setup(name='hbspy',
+setup(name='hsfpypy',
       version='0.1',
       author="Spencer Lyon",
-      description="""Wrapping HBS for python using SWIG""",
+      description="""Wrapping hsfpy for python using SWIG""",
       ext_modules=[h_knot_vector],
-      py_modules=["hbspy"],
+      py_modules=["hsfpypy"],
       )

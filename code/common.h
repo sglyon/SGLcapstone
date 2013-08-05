@@ -10,7 +10,7 @@
 #include <string>
 #include <assert.h>
 
-/// common definitions needed throughout the hbs library
+/// common definitions needed throughout the hsf library
 
 typedef unsigned int uint;
 typedef unsigned long ulong;

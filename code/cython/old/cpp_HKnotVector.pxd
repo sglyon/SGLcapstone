@@ -1,6 +1,6 @@
 from libcpp.vector cimport vector as cpp_vector
 
-cdef extern from "../HKnotVector.h" namespace "hbs":
+cdef extern from "../HKnotVector.h" namespace "hsf":
     cdef cppclass HKnotVector:
         # Constructors
         HKnotVector()

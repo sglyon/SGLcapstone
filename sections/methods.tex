@@ -2,7 +2,7 @@
 
 \section{Methods} \label{sec:methods}
 
-In this section I describe the different approaches that were employed and considered during the creation of \texttt{hbspy}. I will give an overview of the tools that were used or considered for this project as well as a short usage example for each tool. To maintain consistency and make differences across the methods more apparent, I will use a selection of the code from the HBS C++ library. The main components of this example code are a C++ class \texttt{HKnotVector}, a function \texttt{numClamp}, and a few typedefs, \texttt{DoubleVec, IntVec}, and \texttt{IntVecVec}. The source code can be found in Appendix~\ref{app:code}.
+In this section I describe the different approaches that were employed and considered during the creation of \texttt{hsfpy}. I will give an overview of the tools that were used or considered for this project as well as a short usage example for each tool. To maintain consistency and make differences across the methods more apparent, I will use a selection of the code from the \texttt{hsf} C++ library. The main components of this example code are a C++ class \texttt{HKnotVector}, a function \texttt{numClamp}, and a few typedefs, \texttt{DoubleVec, IntVec}, and \texttt{IntVecVec}. The source code can be found in Appendix~\ref{app:code}.
 
 \subsection{SWIG} \label{sub:swig}
 
@@ -16,7 +16,7 @@ In this section I describe the different approaches that were employed and consi
 
   \noindent  SWIG is a very well-established project; the first version appeared in July 1995 and the most recent version was released in May 2013. Over the years, SWIG has developed in to a very powerful and flexible tool. The best expression of this flexibility is that SWIG officially has at least partial support for nineteen different target languages, whereas other tools that will be discussed in this section are Python specific. A great aspect of this flexibility is that users can run SWIG on the exact same set of files and generate wrappers for different target languages by simply changing a single command line argument.
 
-  However, SWIG is not a perfect tool. Due in part to the freedom it gives users to choose amongst multiple output languages, SWIG generates wrapper code that is relatively difficult to customize for a specific target language. Furthermore, in order to use SWIG, a user must supply an additional interface file (commonly with a \texttt{.i} suffix) in which the user uses a C-like syntax to describe the desired interface. Finally, the last main drawback I noticed when testing SWIG for \texttt{hbspy} is that the building/compiling phase for SWIG is non-trivial.  \REVIEW{The python inteface is also a little funky sometimes.  Also, passing by reference and pointer are strange in SWIG (or impossible) and these are used extensively in hbs.}
+  However, SWIG is not a perfect tool. Due in part to the freedom it gives users to choose amongst multiple output languages, SWIG generates wrapper code that is relatively difficult to customize for a specific target language. Furthermore, in order to use SWIG, a user must supply an additional interface file (commonly with a \texttt{.i} suffix) in which the user uses a C-like syntax to describe the desired interface. Finally, the last main drawback I noticed when testing SWIG for \texttt{hsfpy} is that the building/compiling phase for SWIG is non-trivial.  \REVIEW{The python inteface is also a little funky sometimes.  Also, passing by reference and pointer are strange in SWIG (or impossible) and these are used extensively in \texttt{hsf}.}
 
   \subsubsection{SWIG Usage Example} \label{ssub:swig_usage_example}
 
@@ -47,7 +47,7 @@ In this section I describe the different approaches that were employed and consi
     \end{lstlisting}
     \mainstretch{}
 
-    \noindent This command runs SWIG, tells it that the source language is C++, the target language is Python and that the interface file is \texttt{HKnotVector.i}. After running the command two files will be generated \texttt{HKnotVector\_wrap.cxx} and \texttt{hbspy.py}. Together these files files make up the wrapper of HKnotVector.
+    \noindent This command runs SWIG, tells it that the source language is C++, the target language is Python and that the interface file is \texttt{HKnotVector.i}. After running the command two files will be generated \texttt{HKnotVector\_wrap.cxx} and \texttt{hsfpy.py}. Together these files files make up the wrapper of HKnotVector.
 
     The next step is to incorporate these files into a build system so that they can be compiled in a way that the system Python can interact with them. The SWIG documentation gives a few possible methods for doing this, but the recommended solution is to let Python handle the compiling. This will ensure that the correct libraries are linked at compile time and that the version of Python directing the compilation will be able to use the objects. To do this, a \texttt{setup.py} file must be created. The interface file for \texttt{HKnotVector} appears below (Note that an explanation of key parts of the file are explained after the code is displayed).
 
@@ -58,7 +58,7 @@ In this section I describe the different approaches that were employed and consi
 
     \begin{itemize}
       \item \textbf{Line 6} From the Python  \texttt{distutils} package, import the \texttt{setup} function and the \texttt{Extension} class. The \texttt{setup} function is the main driving point in this file and will direct the compilation. The \texttt{Extension} class holds all the information the \texttt{setup} function needs to compile the objects.
-      \item \textbf{Lines 8-10} Describe the HKnotVector extension. Notice the first argument given to the \texttt{Extension} constructor is \texttt{"\_hbspy"}. This argument tells the \texttt{setup} function what to name the shared object (or dynamic linking library on Windows) where the compiled wrapper will be placed. Without custom configuration, SWIG requires that this name be a leading underscore followed by the \texttt{\%module} name defined in the interface file.
+      \item \textbf{Lines 8-10} Describe the HKnotVector extension. Notice the first argument given to the \texttt{Extension} constructor is \texttt{"\_hsfpy"}. This argument tells the \texttt{setup} function what to name the shared object (or dynamic linking library on Windows) where the compiled wrapper will be placed. Without custom configuration, SWIG requires that this name be a leading underscore followed by the \texttt{\%module} name defined in the interface file.
       \item \textbf{Lines 12-18} Call the \texttt{setup} function to build all the \texttt{Extension}s in the \texttt{ext\_modules} list. This is also where other metadata about the project goes.
     \end{itemize}
     \mainstretch{}
@@ -74,7 +74,7 @@ In this section I describe the different approaches that were employed and consi
 
     \noindent This command tells the system Python (whatever \texttt{python} resolves to on the user's \texttt{\$PATH}) to build the extensions outlined in \texttt{setup.py} inplace, meaning in the current working directory.
 
-    In the end, I decided not to use SWIG to create the interface to the entire HBS library. The verbose C-like interface files and the need to create a separate interface file for each source file made SWIG more difficult than necessary. In addition, the fact that all code from an exposed C++ source file is wrapped was overkill for this project. However, as can be seen from this small exercise, it is a fairly straightforward, if tedious, process to use SWIG to create a Python interface to C++ code.  \COMMENT{There are also some things that can't be represented in SWIG.}
+    In the end, I decided not to use SWIG to create the interface to the entire \texttt{hsf} library. The verbose C-like interface files and the need to create a separate interface file for each source file made SWIG more difficult than necessary. In addition, the fact that all code from an exposed C++ source file is wrapped was overkill for this project. However, as can be seen from this small exercise, it is a fairly straightforward, if tedious, process to use SWIG to create a Python interface to C++ code.  \COMMENT{There are also some things that can't be represented in SWIG.}
 
 \subsection{Boost.Python} \label{sub:boost_python}
 \COMMENT{You probably don't need much more than this because you don't end up using boost.  Read over it to make sure that it's clear and correct.}
@@ -90,7 +90,7 @@ In this section I describe the different approaches that were employed and consi
     \item Control over Python documentation strings
   \end{itemize}
 
-  On the other hand, Boost has some limitations. First, Boost has a difficult \texttt{Bjam} utility for compiling the wrappers. \texttt{Bjam} is similar to \texttt{make}, but has a difficult and strange syntax. Second, the generated wrapper code is generally very verbose. While is is probably do to supporting some C++ features that other wrapping tools do not, it has at least two major drawbacks: 1) It takes a long time to compile the wrappers and 2) the Python-side execution is typically noticeably slower than the code generated with other tools. Finally, the major drawback and ultimate reason why I did not use Boost for \texttt{hbspy} is that it is very difficult to install. After reading the (sparse) documentation and searching the internet, I still could not get Boost.Python correctly installed and configured on my system. This would be a major roadblock to future users of the Python bindings and would actually detract from the main justification for creating the bindings: lowering the bar to entry for using HBS in research. For these reasons, I will not include a usage example for Boost.Python, but because I spent quite a bit of time on it and many people seem to like it, I felt it needed to be addressed in this report.
+  On the other hand, Boost has some limitations. First, Boost has a difficult \texttt{Bjam} utility for compiling the wrappers. \texttt{Bjam} is similar to \texttt{make}, but has a difficult and strange syntax. Second, the generated wrapper code is generally very verbose. While is is probably do to supporting some C++ features that other wrapping tools do not, it has at least two major drawbacks: 1) It takes a long time to compile the wrappers and 2) the Python-side execution is typically noticeably slower than the code generated with other tools. Finally, the major drawback and ultimate reason why I did not use Boost for \texttt{hsfpy} is that it is very difficult to install. After reading the (sparse) documentation and searching the internet, I still could not get Boost.Python correctly installed and configured on my system. This would be a major roadblock to future users of the Python bindings and would actually detract from the main justification for creating the bindings: lowering the bar to entry for using \texttt{hsf} in research. For these reasons, I will not include a usage example for Boost.Python, but because I spent quite a bit of time on it and many people seem to like it, I felt it needed to be addressed in this report.
 
 \subsection{Cython} \label{sub:cython}
 
@@ -167,22 +167,22 @@ In this section I describe the different approaches that were employed and consi
     % Because these files are a bit longer than the other examples, I have included then in Appendix \ref{app:cython}
     I begin with Listing \ref{code:hkxCPPpxd}, which is the file \texttt{cpp\_HKnotVector.cpp}. In this file I use the \texttt{vector} class defined in \texttt{libcpp.vector} and include the all the declarations that appear in \texttt{HKnotVector.h} (Listing \ref{code:HKnotVector} in Appendix \ref{app:code}).
 
-    \REVIEW{Should these code listings be put in an appendix? Part of me thinks yes because they are long, but the other part says no because they are central to what I have done with hbspy}
+    \REVIEW{Should these code listings be put in an appendix? Part of me thinks yes because they are long, but the other part says no because they are central to what I have done with hsfpy}
 
     \setstretch{0.7}
-    \lstinputlisting[language=python, label=code:hkxCPPpxd, caption=\texttt{cpp\_HKnotVector.pxd}]{../code/cython/hbspy/cpp_HKnotVector.pxd}
+    \lstinputlisting[language=python, label=code:hkxCPPpxd, caption=\texttt{cpp\_HKnotVector.pxd}]{../code/cython/hsfpy/cpp_HKnotVector.pxd}
     \mainstretch{}
 
     \noindent The next part of the wrapper is the Cython interface \texttt{HKnotVector.pxd }in Listing \ref{code:hkvpxd}. This is a very minimal file that declares the \texttt{HKnotVector} class and sets up some initial attributes of the class.
 
     \setstretch{0.7}
-    \lstinputlisting[language=python, label=code:hkvpxd, caption=\texttt{HKnotVector.pxd}]{../code/cython/hbspy/HKnotVector.pxd}
+    \lstinputlisting[language=python, label=code:hkvpxd, caption=\texttt{HKnotVector.pxd}]{../code/cython/hsfpy/HKnotVector.pxd}
     \mainstretch{}
 
     The final part and main of the wrapper is \texttt{HKnotVector.pyx}, shown here in Listing \ref{code:hkvpyx}. This is where all attributes and methods declared in either of the interface file are implemented.
 
     \setstretch{0.7}
-    \lstinputlisting[language=python, label=code:hkvpyx, caption=\texttt{HKnotVector.pyx}]{../code/cython/hbspy/HKnotVector.pyx}
+    \lstinputlisting[language=python, label=code:hkvpyx, caption=\texttt{HKnotVector.pyx}]{../code/cython/hsfpy/HKnotVector.pyx}
     \setstretch{1.35}
 
     \begin{itemize}
@@ -193,17 +193,17 @@ In this section I describe the different approaches that were employed and consi
     \end{itemize}
     \mainstretch{}
 
-    Now that the wrapper is completed, it needs to be incorporated into a build system and complied into a shared object so that Python can access it. As before, we let python handle this step using a \texttt{setup.py} file, which I have included in Listing \ref{code:cySetup}. There are only a few differences between this file and the other \texttt{setup.py} files presented earlier. First, in lines 6 and 10 I explicitly specify the include directories for the \texttt{HKnotVector} extension. Also, I setup the \texttt{hbspy} package with a module named \texttt{HKnotVector}. This happens on lines 8 and 17.
+    Now that the wrapper is completed, it needs to be incorporated into a build system and complied into a shared object so that Python can access it. As before, we let python handle this step using a \texttt{setup.py} file, which I have included in Listing \ref{code:cySetup}. There are only a few differences between this file and the other \texttt{setup.py} files presented earlier. First, in lines 6 and 10 I explicitly specify the include directories for the \texttt{HKnotVector} extension. Also, I setup the \texttt{hsfpy} package with a module named \texttt{HKnotVector}. This happens on lines 8 and 17.
 
     \setstretch{0.7}
     \lstinputlisting[language=python, label=code:cySetup, caption=\texttt{setup.py} for Cython wrapper of HKnotVector]{../code/cython/hkv_setup.py}
     \mainstretch{}
 
-    As can be see from this example, wrapping code using Cython provides absolute control over the structure and fell of the wrapper, but it takes a lot more work than, for example, SWIG. I have only wrapped a very small portion of the HBS library in this example, but it illustrates the point. The sheer size of the HBS library makes it unreasonable to construct a wrapper by hand using Cython. Additionally, the core HBS C++ library is still being developed and is therefore liable to change at any time. Trying to keep the Cython wrapper up to date would be a difficult and error-prone task. For these reasons, I decided not to use a by-hand Cython approach in creating \texttt{hbspy}.
+    As can be see from this example, wrapping code using Cython provides absolute control over the structure and fell of the wrapper, but it takes a lot more work than, for example, SWIG. I have only wrapped a very small portion of the \texttt{hsf} library in this example, but it illustrates the point. The sheer size of the \texttt{hsf} library makes it unreasonable to construct a wrapper by hand using Cython. Additionally, the core \texttt{hsf} C++ library is still being developed and is therefore liable to change at any time. Trying to keep the Cython wrapper up to date would be a difficult and error-prone task. For these reasons, I decided not to use a by-hand Cython approach in creating \texttt{hsfpy}.
 
 \subsection{XDress} \label{sub:XDress}
 
-  The final tool I evaluated when creating the Python wrapper for HBS is XDress \footnote{XDress is free and open source. The source code is hosted at \url{https://github.com/xdress/xdress} and the homepage for the project is \url{http://xdress.org/}.}. XDress is a very young project that first appeared on github in April 2013. XDress is written in pure python and is an automatic Python wrapper generator for C and C++ source. It constructs the wrapper in a three stage process.
+  The final tool I evaluated when creating the Python wrapper for \texttt{hsf} is XDress \footnote{XDress is free and open source. The source code is hosted at \url{https://github.com/xdress/xdress} and the homepage for the project is \url{http://xdress.org/}.}. XDress is a very young project that first appeared on github in April 2013. XDress is written in pure python and is an automatic Python wrapper generator for C and C++ source. It constructs the wrapper in a three stage process.
 
   \setstretch{1.35}
   \begin{enumerate}
@@ -241,15 +241,10 @@ In this section I describe the different approaches that were employed and consi
 
   \subsubsection{XDress Plugins} \label{ssub:xdress_plugins}
 
-    As can be seen, specifying the API elements that need to be wrapped is straightforward and simple. To complement this simplicity XDress has a very easy to use plugin architecture that gives users absolute control over how the wrapping is handled. The plugin system is not a mere afterthought, but build into the core of how XDress operates. All the major functionality of XDress is modularized into distinct plugins that are executed using this archtecture. This means that user-supplied plugins will be given the same precedence as built-in plugins. To demonstrate some of the possibilities for XDress plugins, I will explain two of the plugins I have written to handle issues encountered with wrapping HBS.
+    As can be seen, specifying the API elements that need to be wrapped is straightforward and simple. To complement this simplicity XDress has a very easy to use plugin architecture that gives users absolute control over how the wrapping is handled. The plugin system is not a mere afterthought, but build into the core of how XDress operates. All the major functionality of XDress is modularized into distinct plugins that are executed using this archtecture. This means that user-supplied plugins will be given the same precedence as built-in plugins. To demonstrate some of the possibilities for XDress plugins, I will explain two of the plugins I have written to handle issues encountered with wrapping \texttt{hsf}.
 
-    The first of these plugins is now a part of XDress and lives in \texttt{xdress.descfilter}. This plugin allows the user to instruct XDress to "filter out" certain API components from the generated wrapper. This can be done in one of two ways: 1) specify that functions or methods with certain types in the function signature be excluded or 2) specify that certain methods of a class should be excluded. This flexibility can be useful when there are certain functions that shouldn't be exposed to Python. This is also a useful stop-gap for data types that have not yet been implemented into the XDress type system. In Section \ref{sub:xdress_and_hbs} I will present the actual \texttt{xdressrc.py} file currently being developed for HBS, which will provide a usage example for \texttt{xdress.descfilter}.
+    The first of these plugins is now a part of XDress and lives in \texttt{xdress.descfilter}. This plugin allows the user to instruct XDress to "filter out" certain API components from the generated wrapper. This can be done in one of two ways: 1) specify that functions or methods with certain types in the function signature be excluded or 2) specify that certain methods of a class should be excluded. This flexibility can be useful when there are certain functions that shouldn't be exposed to Python. This is also a useful stop-gap for data types that have not yet been implemented into the XDress type system. In Section \ref{sub:xdress_and_hsfpy} I will present the actual \texttt{xdressrc.py} file currently being developed for \texttt{hsf}, which will provide a usage example for \texttt{xdress.descfilter}.
 
     The second plugin is also part of XDress and lives in  \texttt{xdress.doxygen}. This plugin uses dOxygen\footnote{dOxygen is a common documentation utility for C/C++ projects that gives the user the ability to have specially formatted comments in the source code become stylized documentation elements. dOxygen is free and open source. The code is hosted at \url{https://github.com/doxygen/doxygen} and the homepage for the project is \url{http://www.stack.nl/~dimitri/doxygen/}.} to output an xml version of in-line documentation contained in the C/C++ source. The plugin then parses this xml, automatically generates Python docstrings, and inserts them into the Cython wrappers. These docstrings have many uses such as to provide information on methods, classes, or functions when these objects are inspected at the Python interpreter, or to be used by a tool like Sphinx\footnote{Sphinx is a Python package that can automatically create html or pdf (via latex) documentation using the reStructuredText markup language. Additionally, Sphinx can inspect docstrings and turn them into stylized documentation elements, much like dOxygen.} in conjunction with other content to produce stylized documentation.
 
-    Another important item to note is that because I got involved with XDress development at a very early stage and the HBS library utilizes a lot of advanced C++ language features, much of the recent and current development of XDress is being driven by the needs that arise in wrapping HBS. This, together with the ease and freedom XDress provides, caused me to choose XDress as the tool to use in constructing \texttt{hbspy}. As the HBS project moves forward, the relationship with the lead XDress developer, Anthony Scopatz, and the close integration between HBS and the XDress development cycle will very helpful and should ensure long-term functionality.
-
-%%% Local Variables: 
-%%% mode: latex
-%%% TeX-master: "../myStyle/Capstone"
-%%% End: 
+    Another important item to note is that because I got involved with XDress development at a very early stage and the \texttt{hsf} library utilizes a lot of advanced C++ language features, much of the recent and current development of XDress is being driven by the needs that arise in wrapping \texttt{hsf}. This, together with the ease and freedom XDress provides, caused me to choose XDress as the tool to use in constructing \texttt{hsfpy}. As the \texttt{hsf} project moves forward, the relationship with the lead XDress developer, Anthony Scopatz, and the close integration between \texttt{hsf} and the XDress development cycle will very helpful and should ensure long-term functionality.
