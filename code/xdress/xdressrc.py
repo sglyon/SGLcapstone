@@ -1,6 +1,6 @@
 ## Do basic setup
-package = 'hsfpypy'  # top-level python package name
-packagedir = 'hsfpypy'  # location of the generated python package
+package = 'hsfpy'  # top-level python package name
+packagedir = 'hsfpy'  # location of the generated python package
 sourcedir = '../'  # location of the original C++ source
 
 ## List the plugins we need. This step is optional, but we use it because we

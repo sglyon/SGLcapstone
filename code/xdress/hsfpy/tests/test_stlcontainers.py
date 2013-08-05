@@ -16,7 +16,7 @@ import os
 import numpy  as np
 from collections import Container, Mapping
 
-from hsfpypy import stlcontainers
+from hsfpy import stlcontainers
 
 
 # SetUInt

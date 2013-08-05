@@ -13,20 +13,20 @@ if version_info >= (2,6,0):
         import imp
         fp = None
         try:
-            fp, pathname, description = imp.find_module('_hsfpypy', [dirname(__file__)])
+            fp, pathname, description = imp.find_module('_hsfpy', [dirname(__file__)])
         except ImportError:
-            import _hsfpypy
-            return _hsfpypy
+            import _hsfpy
+            return _hsfpy
         if fp is not None:
             try:
-                _mod = imp.load_module('_hsfpypy', fp, pathname, description)
+                _mod = imp.load_module('_hsfpy', fp, pathname, description)
             finally:
                 fp.close()
             return _mod
-    _hsfpypy = swig_import_helper()
+    _hsfpy = swig_import_helper()
     del swig_import_helper
 else:
-    import _hsfpypy
+    import _hsfpy
 del version_info
 try:
     _swig_property = property
@@ -74,26 +74,26 @@ class SwigPyIterator(_object):
     __getattr__ = lambda self, name: _swig_getattr(self, SwigPyIterator, name)
     def __init__(self, *args, **kwargs): raise AttributeError("No constructor defined - class is abstract")
     __repr__ = _swig_repr
-    __swig_destroy__ = _hsfpypy.delete_SwigPyIterator
+    __swig_destroy__ = _hsfpy.delete_SwigPyIterator
     __del__ = lambda self : None;
-    def value(self): return _hsfpypy.SwigPyIterator_value(self)
-    def incr(self, n=1): return _hsfpypy.SwigPyIterator_incr(self, n)
-    def decr(self, n=1): return _hsfpypy.SwigPyIterator_decr(self, n)
-    def distance(self, *args): return _hsfpypy.SwigPyIterator_distance(self, *args)
-    def equal(self, *args): return _hsfpypy.SwigPyIterator_equal(self, *args)
-    def copy(self): return _hsfpypy.SwigPyIterator_copy(self)
-    def next(self): return _hsfpypy.SwigPyIterator_next(self)
-    def __next__(self): return _hsfpypy.SwigPyIterator___next__(self)
-    def previous(self): return _hsfpypy.SwigPyIterator_previous(self)
-    def advance(self, *args): return _hsfpypy.SwigPyIterator_advance(self, *args)
-    def __eq__(self, *args): return _hsfpypy.SwigPyIterator___eq__(self, *args)
-    def __ne__(self, *args): return _hsfpypy.SwigPyIterator___ne__(self, *args)
-    def __iadd__(self, *args): return _hsfpypy.SwigPyIterator___iadd__(self, *args)
-    def __isub__(self, *args): return _hsfpypy.SwigPyIterator___isub__(self, *args)
-    def __add__(self, *args): return _hsfpypy.SwigPyIterator___add__(self, *args)
-    def __sub__(self, *args): return _hsfpypy.SwigPyIterator___sub__(self, *args)
+    def value(self): return _hsfpy.SwigPyIterator_value(self)
+    def incr(self, n=1): return _hsfpy.SwigPyIterator_incr(self, n)
+    def decr(self, n=1): return _hsfpy.SwigPyIterator_decr(self, n)
+    def distance(self, *args): return _hsfpy.SwigPyIterator_distance(self, *args)
+    def equal(self, *args): return _hsfpy.SwigPyIterator_equal(self, *args)
+    def copy(self): return _hsfpy.SwigPyIterator_copy(self)
+    def next(self): return _hsfpy.SwigPyIterator_next(self)
+    def __next__(self): return _hsfpy.SwigPyIterator___next__(self)
+    def previous(self): return _hsfpy.SwigPyIterator_previous(self)
+    def advance(self, *args): return _hsfpy.SwigPyIterator_advance(self, *args)
+    def __eq__(self, *args): return _hsfpy.SwigPyIterator___eq__(self, *args)
+    def __ne__(self, *args): return _hsfpy.SwigPyIterator___ne__(self, *args)
+    def __iadd__(self, *args): return _hsfpy.SwigPyIterator___iadd__(self, *args)
+    def __isub__(self, *args): return _hsfpy.SwigPyIterator___isub__(self, *args)
+    def __add__(self, *args): return _hsfpy.SwigPyIterator___add__(self, *args)
+    def __sub__(self, *args): return _hsfpy.SwigPyIterator___sub__(self, *args)
     def __iter__(self): return self
-SwigPyIterator_swigregister = _hsfpypy.SwigPyIterator_swigregister
+SwigPyIterator_swigregister = _hsfpy.SwigPyIterator_swigregister
 SwigPyIterator_swigregister(SwigPyIterator)
 
 class IntVec(_object):
@@ -102,45 +102,45 @@ class IntVec(_object):
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, IntVec, name)
     __repr__ = _swig_repr
-    def iterator(self): return _hsfpypy.IntVec_iterator(self)
+    def iterator(self): return _hsfpy.IntVec_iterator(self)
     def __iter__(self): return self.iterator()
-    def __nonzero__(self): return _hsfpypy.IntVec___nonzero__(self)
-    def __bool__(self): return _hsfpypy.IntVec___bool__(self)
-    def __len__(self): return _hsfpypy.IntVec___len__(self)
-    def pop(self): return _hsfpypy.IntVec_pop(self)
-    def __getslice__(self, *args): return _hsfpypy.IntVec___getslice__(self, *args)
-    def __setslice__(self, *args): return _hsfpypy.IntVec___setslice__(self, *args)
-    def __delslice__(self, *args): return _hsfpypy.IntVec___delslice__(self, *args)
-    def __delitem__(self, *args): return _hsfpypy.IntVec___delitem__(self, *args)
-    def __getitem__(self, *args): return _hsfpypy.IntVec___getitem__(self, *args)
-    def __setitem__(self, *args): return _hsfpypy.IntVec___setitem__(self, *args)
-    def append(self, *args): return _hsfpypy.IntVec_append(self, *args)
-    def empty(self): return _hsfpypy.IntVec_empty(self)
-    def size(self): return _hsfpypy.IntVec_size(self)
-    def clear(self): return _hsfpypy.IntVec_clear(self)
-    def swap(self, *args): return _hsfpypy.IntVec_swap(self, *args)
-    def get_allocator(self): return _hsfpypy.IntVec_get_allocator(self)
-    def begin(self): return _hsfpypy.IntVec_begin(self)
-    def end(self): return _hsfpypy.IntVec_end(self)
-    def rbegin(self): return _hsfpypy.IntVec_rbegin(self)
-    def rend(self): return _hsfpypy.IntVec_rend(self)
-    def pop_back(self): return _hsfpypy.IntVec_pop_back(self)
-    def erase(self, *args): return _hsfpypy.IntVec_erase(self, *args)
+    def __nonzero__(self): return _hsfpy.IntVec___nonzero__(self)
+    def __bool__(self): return _hsfpy.IntVec___bool__(self)
+    def __len__(self): return _hsfpy.IntVec___len__(self)
+    def pop(self): return _hsfpy.IntVec_pop(self)
+    def __getslice__(self, *args): return _hsfpy.IntVec___getslice__(self, *args)
+    def __setslice__(self, *args): return _hsfpy.IntVec___setslice__(self, *args)
+    def __delslice__(self, *args): return _hsfpy.IntVec___delslice__(self, *args)
+    def __delitem__(self, *args): return _hsfpy.IntVec___delitem__(self, *args)
+    def __getitem__(self, *args): return _hsfpy.IntVec___getitem__(self, *args)
+    def __setitem__(self, *args): return _hsfpy.IntVec___setitem__(self, *args)
+    def append(self, *args): return _hsfpy.IntVec_append(self, *args)
+    def empty(self): return _hsfpy.IntVec_empty(self)
+    def size(self): return _hsfpy.IntVec_size(self)
+    def clear(self): return _hsfpy.IntVec_clear(self)
+    def swap(self, *args): return _hsfpy.IntVec_swap(self, *args)
+    def get_allocator(self): return _hsfpy.IntVec_get_allocator(self)
+    def begin(self): return _hsfpy.IntVec_begin(self)
+    def end(self): return _hsfpy.IntVec_end(self)
+    def rbegin(self): return _hsfpy.IntVec_rbegin(self)
+    def rend(self): return _hsfpy.IntVec_rend(self)
+    def pop_back(self): return _hsfpy.IntVec_pop_back(self)
+    def erase(self, *args): return _hsfpy.IntVec_erase(self, *args)
     def __init__(self, *args):
-        this = _hsfpypy.new_IntVec(*args)
+        this = _hsfpy.new_IntVec(*args)
         try: self.this.append(this)
         except: self.this = this
-    def push_back(self, *args): return _hsfpypy.IntVec_push_back(self, *args)
-    def front(self): return _hsfpypy.IntVec_front(self)
-    def back(self): return _hsfpypy.IntVec_back(self)
-    def assign(self, *args): return _hsfpypy.IntVec_assign(self, *args)
-    def resize(self, *args): return _hsfpypy.IntVec_resize(self, *args)
-    def insert(self, *args): return _hsfpypy.IntVec_insert(self, *args)
-    def reserve(self, *args): return _hsfpypy.IntVec_reserve(self, *args)
-    def capacity(self): return _hsfpypy.IntVec_capacity(self)
-    __swig_destroy__ = _hsfpypy.delete_IntVec
+    def push_back(self, *args): return _hsfpy.IntVec_push_back(self, *args)
+    def front(self): return _hsfpy.IntVec_front(self)
+    def back(self): return _hsfpy.IntVec_back(self)
+    def assign(self, *args): return _hsfpy.IntVec_assign(self, *args)
+    def resize(self, *args): return _hsfpy.IntVec_resize(self, *args)
+    def insert(self, *args): return _hsfpy.IntVec_insert(self, *args)
+    def reserve(self, *args): return _hsfpy.IntVec_reserve(self, *args)
+    def capacity(self): return _hsfpy.IntVec_capacity(self)
+    __swig_destroy__ = _hsfpy.delete_IntVec
     __del__ = lambda self : None;
-IntVec_swigregister = _hsfpypy.IntVec_swigregister
+IntVec_swigregister = _hsfpy.IntVec_swigregister
 IntVec_swigregister(IntVec)
 
 class DoubleVec(_object):
@@ -149,45 +149,45 @@ class DoubleVec(_object):
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, DoubleVec, name)
     __repr__ = _swig_repr
-    def iterator(self): return _hsfpypy.DoubleVec_iterator(self)
+    def iterator(self): return _hsfpy.DoubleVec_iterator(self)
     def __iter__(self): return self.iterator()
-    def __nonzero__(self): return _hsfpypy.DoubleVec___nonzero__(self)
-    def __bool__(self): return _hsfpypy.DoubleVec___bool__(self)
-    def __len__(self): return _hsfpypy.DoubleVec___len__(self)
-    def pop(self): return _hsfpypy.DoubleVec_pop(self)
-    def __getslice__(self, *args): return _hsfpypy.DoubleVec___getslice__(self, *args)
-    def __setslice__(self, *args): return _hsfpypy.DoubleVec___setslice__(self, *args)
-    def __delslice__(self, *args): return _hsfpypy.DoubleVec___delslice__(self, *args)
-    def __delitem__(self, *args): return _hsfpypy.DoubleVec___delitem__(self, *args)
-    def __getitem__(self, *args): return _hsfpypy.DoubleVec___getitem__(self, *args)
-    def __setitem__(self, *args): return _hsfpypy.DoubleVec___setitem__(self, *args)
-    def append(self, *args): return _hsfpypy.DoubleVec_append(self, *args)
-    def empty(self): return _hsfpypy.DoubleVec_empty(self)
-    def size(self): return _hsfpypy.DoubleVec_size(self)
-    def clear(self): return _hsfpypy.DoubleVec_clear(self)
-    def swap(self, *args): return _hsfpypy.DoubleVec_swap(self, *args)
-    def get_allocator(self): return _hsfpypy.DoubleVec_get_allocator(self)
-    def begin(self): return _hsfpypy.DoubleVec_begin(self)
-    def end(self): return _hsfpypy.DoubleVec_end(self)
-    def rbegin(self): return _hsfpypy.DoubleVec_rbegin(self)
-    def rend(self): return _hsfpypy.DoubleVec_rend(self)
-    def pop_back(self): return _hsfpypy.DoubleVec_pop_back(self)
-    def erase(self, *args): return _hsfpypy.DoubleVec_erase(self, *args)
+    def __nonzero__(self): return _hsfpy.DoubleVec___nonzero__(self)
+    def __bool__(self): return _hsfpy.DoubleVec___bool__(self)
+    def __len__(self): return _hsfpy.DoubleVec___len__(self)
+    def pop(self): return _hsfpy.DoubleVec_pop(self)
+    def __getslice__(self, *args): return _hsfpy.DoubleVec___getslice__(self, *args)
+    def __setslice__(self, *args): return _hsfpy.DoubleVec___setslice__(self, *args)
+    def __delslice__(self, *args): return _hsfpy.DoubleVec___delslice__(self, *args)
+    def __delitem__(self, *args): return _hsfpy.DoubleVec___delitem__(self, *args)
+    def __getitem__(self, *args): return _hsfpy.DoubleVec___getitem__(self, *args)
+    def __setitem__(self, *args): return _hsfpy.DoubleVec___setitem__(self, *args)
+    def append(self, *args): return _hsfpy.DoubleVec_append(self, *args)
+    def empty(self): return _hsfpy.DoubleVec_empty(self)
+    def size(self): return _hsfpy.DoubleVec_size(self)
+    def clear(self): return _hsfpy.DoubleVec_clear(self)
+    def swap(self, *args): return _hsfpy.DoubleVec_swap(self, *args)
+    def get_allocator(self): return _hsfpy.DoubleVec_get_allocator(self)
+    def begin(self): return _hsfpy.DoubleVec_begin(self)
+    def end(self): return _hsfpy.DoubleVec_end(self)
+    def rbegin(self): return _hsfpy.DoubleVec_rbegin(self)
+    def rend(self): return _hsfpy.DoubleVec_rend(self)
+    def pop_back(self): return _hsfpy.DoubleVec_pop_back(self)
+    def erase(self, *args): return _hsfpy.DoubleVec_erase(self, *args)
     def __init__(self, *args):
-        this = _hsfpypy.new_DoubleVec(*args)
+        this = _hsfpy.new_DoubleVec(*args)
         try: self.this.append(this)
         except: self.this = this
-    def push_back(self, *args): return _hsfpypy.DoubleVec_push_back(self, *args)
-    def front(self): return _hsfpypy.DoubleVec_front(self)
-    def back(self): return _hsfpypy.DoubleVec_back(self)
-    def assign(self, *args): return _hsfpypy.DoubleVec_assign(self, *args)
-    def resize(self, *args): return _hsfpypy.DoubleVec_resize(self, *args)
-    def insert(self, *args): return _hsfpypy.DoubleVec_insert(self, *args)
-    def reserve(self, *args): return _hsfpypy.DoubleVec_reserve(self, *args)
-    def capacity(self): return _hsfpypy.DoubleVec_capacity(self)
-    __swig_destroy__ = _hsfpypy.delete_DoubleVec
+    def push_back(self, *args): return _hsfpy.DoubleVec_push_back(self, *args)
+    def front(self): return _hsfpy.DoubleVec_front(self)
+    def back(self): return _hsfpy.DoubleVec_back(self)
+    def assign(self, *args): return _hsfpy.DoubleVec_assign(self, *args)
+    def resize(self, *args): return _hsfpy.DoubleVec_resize(self, *args)
+    def insert(self, *args): return _hsfpy.DoubleVec_insert(self, *args)
+    def reserve(self, *args): return _hsfpy.DoubleVec_reserve(self, *args)
+    def capacity(self): return _hsfpy.DoubleVec_capacity(self)
+    __swig_destroy__ = _hsfpy.delete_DoubleVec
     __del__ = lambda self : None;
-DoubleVec_swigregister = _hsfpypy.DoubleVec_swigregister
+DoubleVec_swigregister = _hsfpy.DoubleVec_swigregister
 DoubleVec_swigregister(DoubleVec)
 
 class IntVecVec(_object):
@@ -196,45 +196,45 @@ class IntVecVec(_object):
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, IntVecVec, name)
     __repr__ = _swig_repr
-    def iterator(self): return _hsfpypy.IntVecVec_iterator(self)
+    def iterator(self): return _hsfpy.IntVecVec_iterator(self)
     def __iter__(self): return self.iterator()
-    def __nonzero__(self): return _hsfpypy.IntVecVec___nonzero__(self)
-    def __bool__(self): return _hsfpypy.IntVecVec___bool__(self)
-    def __len__(self): return _hsfpypy.IntVecVec___len__(self)
-    def pop(self): return _hsfpypy.IntVecVec_pop(self)
-    def __getslice__(self, *args): return _hsfpypy.IntVecVec___getslice__(self, *args)
-    def __setslice__(self, *args): return _hsfpypy.IntVecVec___setslice__(self, *args)
-    def __delslice__(self, *args): return _hsfpypy.IntVecVec___delslice__(self, *args)
-    def __delitem__(self, *args): return _hsfpypy.IntVecVec___delitem__(self, *args)
-    def __getitem__(self, *args): return _hsfpypy.IntVecVec___getitem__(self, *args)
-    def __setitem__(self, *args): return _hsfpypy.IntVecVec___setitem__(self, *args)
-    def append(self, *args): return _hsfpypy.IntVecVec_append(self, *args)
-    def empty(self): return _hsfpypy.IntVecVec_empty(self)
-    def size(self): return _hsfpypy.IntVecVec_size(self)
-    def clear(self): return _hsfpypy.IntVecVec_clear(self)
-    def swap(self, *args): return _hsfpypy.IntVecVec_swap(self, *args)
-    def get_allocator(self): return _hsfpypy.IntVecVec_get_allocator(self)
-    def begin(self): return _hsfpypy.IntVecVec_begin(self)
-    def end(self): return _hsfpypy.IntVecVec_end(self)
-    def rbegin(self): return _hsfpypy.IntVecVec_rbegin(self)
-    def rend(self): return _hsfpypy.IntVecVec_rend(self)
-    def pop_back(self): return _hsfpypy.IntVecVec_pop_back(self)
-    def erase(self, *args): return _hsfpypy.IntVecVec_erase(self, *args)
+    def __nonzero__(self): return _hsfpy.IntVecVec___nonzero__(self)
+    def __bool__(self): return _hsfpy.IntVecVec___bool__(self)
+    def __len__(self): return _hsfpy.IntVecVec___len__(self)
+    def pop(self): return _hsfpy.IntVecVec_pop(self)
+    def __getslice__(self, *args): return _hsfpy.IntVecVec___getslice__(self, *args)
+    def __setslice__(self, *args): return _hsfpy.IntVecVec___setslice__(self, *args)
+    def __delslice__(self, *args): return _hsfpy.IntVecVec___delslice__(self, *args)
+    def __delitem__(self, *args): return _hsfpy.IntVecVec___delitem__(self, *args)
+    def __getitem__(self, *args): return _hsfpy.IntVecVec___getitem__(self, *args)
+    def __setitem__(self, *args): return _hsfpy.IntVecVec___setitem__(self, *args)
+    def append(self, *args): return _hsfpy.IntVecVec_append(self, *args)
+    def empty(self): return _hsfpy.IntVecVec_empty(self)
+    def size(self): return _hsfpy.IntVecVec_size(self)
+    def clear(self): return _hsfpy.IntVecVec_clear(self)
+    def swap(self, *args): return _hsfpy.IntVecVec_swap(self, *args)
+    def get_allocator(self): return _hsfpy.IntVecVec_get_allocator(self)
+    def begin(self): return _hsfpy.IntVecVec_begin(self)
+    def end(self): return _hsfpy.IntVecVec_end(self)
+    def rbegin(self): return _hsfpy.IntVecVec_rbegin(self)
+    def rend(self): return _hsfpy.IntVecVec_rend(self)
+    def pop_back(self): return _hsfpy.IntVecVec_pop_back(self)
+    def erase(self, *args): return _hsfpy.IntVecVec_erase(self, *args)
     def __init__(self, *args):
-        this = _hsfpypy.new_IntVecVec(*args)
+        this = _hsfpy.new_IntVecVec(*args)
         try: self.this.append(this)
         except: self.this = this
-    def push_back(self, *args): return _hsfpypy.IntVecVec_push_back(self, *args)
-    def front(self): return _hsfpypy.IntVecVec_front(self)
-    def back(self): return _hsfpypy.IntVecVec_back(self)
-    def assign(self, *args): return _hsfpypy.IntVecVec_assign(self, *args)
-    def resize(self, *args): return _hsfpypy.IntVecVec_resize(self, *args)
-    def insert(self, *args): return _hsfpypy.IntVecVec_insert(self, *args)
-    def reserve(self, *args): return _hsfpypy.IntVecVec_reserve(self, *args)
-    def capacity(self): return _hsfpypy.IntVecVec_capacity(self)
-    __swig_destroy__ = _hsfpypy.delete_IntVecVec
+    def push_back(self, *args): return _hsfpy.IntVecVec_push_back(self, *args)
+    def front(self): return _hsfpy.IntVecVec_front(self)
+    def back(self): return _hsfpy.IntVecVec_back(self)
+    def assign(self, *args): return _hsfpy.IntVecVec_assign(self, *args)
+    def resize(self, *args): return _hsfpy.IntVecVec_resize(self, *args)
+    def insert(self, *args): return _hsfpy.IntVecVec_insert(self, *args)
+    def reserve(self, *args): return _hsfpy.IntVecVec_reserve(self, *args)
+    def capacity(self): return _hsfpy.IntVecVec_capacity(self)
+    __swig_destroy__ = _hsfpy.delete_IntVecVec
     __del__ = lambda self : None;
-IntVecVec_swigregister = _hsfpypy.IntVecVec_swigregister
+IntVecVec_swigregister = _hsfpy.IntVecVec_swigregister
 IntVecVec_swigregister(IntVecVec)
 
 class HKnotVector(_object):
@@ -244,15 +244,15 @@ class HKnotVector(_object):
     __getattr__ = lambda self, name: _swig_getattr(self, HKnotVector, name)
     __repr__ = _swig_repr
     def __init__(self, *args):
-        this = _hsfpypy.new_HKnotVector(*args)
+        this = _hsfpy.new_HKnotVector(*args)
         try: self.this.append(this)
         except: self.this = this
-    __swig_destroy__ = _hsfpypy.delete_HKnotVector
+    __swig_destroy__ = _hsfpy.delete_HKnotVector
     __del__ = lambda self : None;
-    def degree(self): return _hsfpypy.HKnotVector_degree(self)
-    def isEven(self): return _hsfpypy.HKnotVector_isEven(self)
-    def isOdd(self): return _hsfpypy.HKnotVector_isOdd(self)
-HKnotVector_swigregister = _hsfpypy.HKnotVector_swigregister
+    def degree(self): return _hsfpy.HKnotVector_degree(self)
+    def isEven(self): return _hsfpy.HKnotVector_isEven(self)
+    def isOdd(self): return _hsfpy.HKnotVector_isOdd(self)
+HKnotVector_swigregister = _hsfpy.HKnotVector_swigregister
 HKnotVector_swigregister(HKnotVector)
 
 # This file is compatible with both classic and new-style classes.
