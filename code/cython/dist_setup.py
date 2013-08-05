@@ -1,12 +1,4 @@
-import os
 from distutils.core import setup
-from distutils.extension import Extension
-import numpy as np
+from Cython.Build import cythonize
 
-inc_dirs = [np.get_include(),
-            '..']
-
-hkv = Extension("hsfpy.HKnotVector", ['HKnotVector.pyx'],
-                include_dirs=['..', '.', np.get_include()], language="c++")
-
-setup(name="Pairwise distance", ext_modules=[hkv])
+setup(name="Pairwise distance", ext_modules=cythonize('cy_pairs.pyx'))
