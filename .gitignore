@@ -40,3 +40,5 @@ build/
 *.so
 *.xml
 *~
+*.upa
+*.upb
