@@ -2,9 +2,58 @@
 
 \section{Results and Discussion} \label{sec:results_and_discussion}
 
+XDress is still actively developed and does not yet support all the features of \texttt{hsf}. As such, \texttt{hsfpy} is still a work on progress. It should be noted, however, that the missing functionality in XDress is minor and should be taken care of before the end of August, 2013. At that time, it will be very easy to finish \texttt{hsfpy}. In the remainder of this section I will present the current version of \texttt{hsfpy}, including the XDress utilities needed to produce it, as well as show some preliminary usage examples.
+
 \subsection{XDress and hsfpy} \label{sub:xdress_and_hsfpy}
 
-TODO: This is a very fluid concept and I think I am going to hold off on writing it for a little
+  All instructions needed to create \texttt{hsfpy} are contained in a single \texttt{xdressrc.py} file, which I give below in Listing \ref{code:actualxdressrc}. This the actual file used in development as of August 5, 2013. After presenting the file I will explain key parts.
+
+  \setstretch{0.7}
+  \vspace{.2in}
+  \lstinputlisting[language=python,label=code:actualxdressrc, caption= Actual \texttt{xdressrc.py} for \texttt{hsfpy}]{../code/actual/xdressrc.py}
+  \setstretch{1.35}
+
+  \begin{itemize}
+    \item \textbf{Lines 1-2} Add the current working directory to the path so the local plugin \texttt{utils.init\_setup} will run\footnote{I have included the contents of \texttt{utils.init\_setup.py} in Appendix \ref{app:initplug}.}.
+    \item \textbf{Lines 4-7} Set the package name, package directory, and source directory
+    \item \textbf{Lines 9-12} Set options for the \texttt{utils.init\_setup} plugin written specifically for \texttt{hsfpy}. This plugin will take the information contained in \texttt{xdressrc.py} and automatically create the necessary \texttt{setup.py} file. It will also create an \texttt{\_\_init\_\_.py} file in the package directory\footnote{The \texttt{\_\_init\_\_.py} file is used to manage namespaces. The \texttt{utils.init\_setup} plugin automatically imports all wrapped functions and classes into the main \texttt{hsfpy} namespace.}. Finally, the plugin will automatically run \texttt{python setup.py build\_ext --inplace} if \texttt{run\_setup} is set to \texttt{True}.
+    \item \textbf{Lines 15-23} List the plugins XDress should use in creating \texttt{hsfpy}.
+    \item \textbf{Lines 25-28} Set the \texttt{skiptypes} parameter used by the plugin \texttt{xdress.descfilter}. Any time an item in this list appears as the type of an argument or return value of a function or method, that method is skipped when the wrapper is generated. For the most part this is necessary for two reasons: 1) The yet un-implemented features of XDress does not properly wrap one of these types or 2) There is no need for the Python interface to deal with these types.
+    \item \textbf{Lines 30-34} Set the \texttt{skipmethods} parameter used by the \texttt{xdress.descfilter} plugin. This dict contains class names as keys and a list of method names as values. The method names specified in the lists will be excluded from the generated wrapper of the class the list pertains to.
+    \item \textbf{Lines 36-46} Which C++ standard library types to create NumPy dtypes for. Note the inclusion of some non-standard types in lines 43-45.
+    \item \textbf{Lines 48-70} Which variables, classes, or functions to create wrappers for. The syntax for these lists was explained in Section \ref{ssub:xdressrc}.
+  \end{itemize}
+  \mainstretch{}
+
+  The \texttt{setup.py} and \texttt{\_\_init\_\_.py} files generated after running xdress are presented in Listing \ref{code:actualsetup} and Listing \ref{code:actualinit}, respectively.
+
+  \setstretch{0.7}
+  \vspace{.2in}
+  \lstinputlisting[language=python,label=code:actualsetup, caption= Actual \texttt{setup.py} for \texttt{hsfpy}]{../code/actual/setup.py}
+
+  \vspace{.2in}
+  \lstinputlisting[language=python,label=code:actualinit, caption= Actual \texttt{\_\_init\_\_.py} for \texttt{hsfpy}]{../code/actual/__init__.py}
+  \mainstretch{}
+
+% ME:
+%   Ok. So you think I could to the following:
+%   1. Explain that xdress is rapidly progressing to a complete tool.
+%   2.
+%    It isn't totally there yet for everything hbs needs
+%   3. This is what we have so far (xdressrc.py)
+%   4. This is what needs to happen in xdress and when it should happen by
+
+% Dr. Thomas:
+%   And then give a few examples
+%   You can at least build a forest
+%   that's the basic data structure in hbs
+%   everything else acts on forests
 
 \subsection{hsfpy Usage} \label{sub:hsfpy_usage}
 
+  Although \texttt{hsfpy} is not entirely finished, there is still a usable subset of \texttt{hsf} available at the time of writing. The basic data structure in HSF is the hierarchical spline forest, which is implemented as \texttt{HForest} and has already been wrapped with basic functionality in \texttt{hsfpy}.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../myStyle/Capstone"
+%%% End:

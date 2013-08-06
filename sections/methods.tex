@@ -77,7 +77,6 @@ In this section I describe the different approaches that were employed and consi
     In the end, I decided not to use SWIG to create the interface to the entire \texttt{hsf} library. The verbose C-like interface files and the need to create a separate interface file for each source file made SWIG more difficult than necessary. In addition, the fact that all code from an exposed C++ source file is wrapped was overkill for this project. Also, not all C++ languages features that appear in \texttt{hsf} are supported by SWIG. However, as can be seen from this small exercise, it is a fairly straightforward, if tedious, process to use SWIG to create a Python interface to C++ code.
 
 \subsection{Boost.Python} \label{sub:boost_python}
-\COMMENT{You probably don't need much more than this because you don't end up using boost.  Read over it to make sure that it's clear and correct.}
   Boost.Python\footnote{Boost.Python is part of the free peer-reviewed Boost project. Boost can be downloaded from the main projects webstie at \url{http://www.boost.org/}. The documentation for Boost.Python can be found at \url{http://www.boost.org/doc/libs/1_54_0/libs/python/doc/index.html}.} (henceforth Boost for short) is an alternative to SWIG and is a highly specialized tool for wrapping C++ for Python use. This apparent lack of flexibility has allowed the Boost developers to provide a very natural and complete coverage of the C++ language. Some key C++ features that are supported in boost are
 
   \begin{itemize}
@@ -176,7 +175,7 @@ In this section I describe the different approaches that were employed and consi
 
     \setstretch{0.7}
     \vspace{.2in}
-    \lstinputlisting[language=python,label=code:samplexdressrc, caption=Sample \texttt{xdressrc.py}: SWIG interface for HKnotVector]{../code/xdress/samplerc.py}
+    \lstinputlisting[language=python,label=code:samplexdressrc, caption=Sample \texttt{xdressrc.py} for HKnotVector]{../code/xdress/samplerc.py}
     \setstretch{1.35}
 
     \begin{itemize}
@@ -203,7 +202,7 @@ In this section I describe the different approaches that were employed and consi
 
     The second plugin is also part of XDress and lives in  \texttt{xdress.doxygen}. This plugin uses dOxygen\footnote{dOxygen is a common documentation utility for C/C++ projects that gives the user the ability to have specially formatted comments in the source code become stylized documentation elements. dOxygen is free and open source. The code is hosted at \url{https://github.com/doxygen/doxygen} and the homepage for the project is \url{http://www.stack.nl/~dimitri/doxygen/}.} to output an xml version of in-line documentation contained in the C/C++ source. The plugin then parses this xml, automatically generates Python docstrings, and inserts them into the Cython wrappers. These docstrings have many uses such as to provide information on methods, classes, or functions when these objects are inspected at the Python interpreter, or to be used by a tool like Sphinx\footnote{Sphinx is a Python package that can automatically create html or pdf (via latex) documentation using the reStructuredText markup language. Additionally, Sphinx can inspect docstrings and turn them into stylized documentation elements, much like dOxygen.} in conjunction with other content to produce stylized documentation. In Section \ref{sub:hsfpy_usage} I will give a preview of what these docstrings look like for \texttt{hsfpy} inside of IPython.
 
-    Another important item to note is that because I got involved with XDress development at a very early stage and the \texttt{hsf} library utilizes a lot of advanced C++ language features, much of the recent and current development of XDress is being driven by the needs that arise in wrapping \texttt{hsf}. This, together with the ease and freedom XDress provides, caused me to choose XDress as the tool to use in constructing \texttt{hsfpy}. As the \texttt{hsf} project moves forward, the relationship with the lead XDress developer, Anthony Scopatz, and the close integration between \texttt{hsf} and the XDress development cycle will very helpful and should ensure long-term functionality.
+    Another important item to note is that because I got involved with XDress development at a very early stage and because the \texttt{hsf} library utilizes advanced C++ language features, much of the recent and current development of XDress is being driven by the needs that arise in wrapping \texttt{hsf}. This, together with the ease and freedom XDress provides, caused me to choose XDress as the tool to use in constructing \texttt{hsfpy}. As the \texttt{hsf} project moves forward, the relationship with the lead XDress developer, Anthony Scopatz, and the close integration between \texttt{hsf} and the XDress development cycle will very helpful and should ensure long-term functionality.
 
 %%% Local Variables:
 %%% mode: latex

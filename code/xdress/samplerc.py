@@ -20,4 +20,4 @@ classes = [('FooClass', 'Foo'),
 
 functions = [('FooFunc', 'Foo')]
 
-Variables = [('barVar', 'Bar')]
+variables = [('barVar', 'Bar')]
