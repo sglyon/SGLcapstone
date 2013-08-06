@@ -1,4 +1,15 @@
 %!TEX root = ../myStyle/Capstone.tex
 \section{Conclusion} \label{sec:conclusion}
 
-  \blindtext
+  \REVIEW{I feel like I am giving a quick summary of everything here. Is that what I am supposed to be doing?}
+
+  I have presented the basics of the hierarchal spline forests project and its associated software implementation. The \texttt{hsf} library is written in C++, which allows the code to be very efficient and generally applicable in many contexts. The long-run goal of \texttt{hsf} is to be the most flexible and powerful discretization package available. To broaden the potential user-base, increase the rate of development, and lower the barriers to entry for undergraduate contributions to the project, the focus of this project has been creating a wrapper around \texttt{hsf} in a high level language.
+
+  I described potential language choices and justified the selection of Python as the high-level target for the wrapper. I evaluated and included functional examples of SWIG, Boost.Python, Cython, and XDress as candidates for creating the Python interface to the library: \texttt{hsfpy}. XDress best fit the needs of \texttt{hsfpy} and was chosen as the tool for its creation. I then gave a detailed explanation of how XDress was used to create the wrapper, including the contributions I have made to XDress to enable functionality required by \texttt{hsfpy}. Finally I presented the current state of the wrapper, showed a usage example, and highlighted various features.
+
+  There is still some work to be done before this project is complete. Most of the remaining tasks deal with extending the capabilities of XDress so that is can handle all the C++ language features \texttt{hsf} uses. After those remaining items are implemented, XDress will be a very robust tool that will make wrapping future projects and maintaining \texttt{hsfpy} simple and straightforward.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../myStyle/Capstone"
+%%% End:
