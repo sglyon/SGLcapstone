@@ -102,7 +102,7 @@ In this section I describe the different approaches that were employed and consi
   \end{itemize}
 
   \mainstretch{}
-  Cython accomplishes this by translating the Cython code directly to C or C++, which can then be compiled and loaded into any Python script or session. This means that blocks of code where all objects have been given static types can be written directly in C and therefore achieve almost\footnote{The almost is necessary because there is small overhead in calling the compiled routines from Python and getting the results back.} C-like performance. In addition, the ability to directly call C, C++, or Fortran makes Cython a viable option for wrapping low-level code for use in Python. In Appendix \ref{app:cython_type_example}, I provide a detailed example static typing in Cython.
+  Cython accomplishes this by translating the Cython code directly to C or C++, which can then be compiled and loaded into any Python script or session. This means that blocks of code where all objects have been given static types can be written directly in C and therefore achieve almost\footnote{The almost is necessary because there is small overhead in calling the compiled routines from Python and getting the results back.} C-like performance. In addition, the ability to directly call C, C++, or Fortran makes Cython a viable option for wrapping low-level code for use in Python. In Appendix \ref{app:cython_type_example}, I provide a detailed example of static typing in Cython.
 
   \subsubsection{Cython Wrapping Example} \label{ssub:cython_wrapping_example}
 
