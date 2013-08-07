@@ -1,0 +1,98 @@
+In [1]: import hsfpy
+
+In [2]: print(hsfpy.HKnotVector.__doc__)
+A one-dimensional object which stores a knot vector of any degree.
+    No geometric operations are performed using a knot vector, only
+    basis function queries. This class is best used in connection with a
+    HNURBS object which stores the geometric information. We do store
+    the extra knot for open knot vectors. So a degree p knot vector will
+    have p + 1 knots at the beginning and end of the knot vector. We
+    currently don't support periodic knot vectors although this could be
+    added pretty easily.
+
+    Attributes
+    ----------
+    mDeg (uint) : The degree associated with this knot vector.
+    mKnots (DoubleVec) : A vector of knots.
+    mGroups (IntVec) : Assign a unique knot multiplicity group index
+        to each knot in the global knot vector.
+    mReverseGroups (IntVecVec) : The reverse map which allows you to
+        map from a multiplicity group index to the group of knot
+        indices of which it is composed.
+    mMultipleCount (IntVec) : The multiplicity number for each knot
+        in the global knot vector. This can be used when
+        transferring between levels in a tree.
+
+
+    Methods
+    -------
+    HKnotVector
+    ~HKnotVector
+    cellN
+    decreaseOrder
+    degree
+    elevate
+    funcGroup
+    getDomainMax
+    getDomainMin
+    getDomainWidth
+    getFirstKnot
+    getFirstKnotIndex
+    getFuncKnot
+    getFuncKnotIndex
+    getKVecData
+    getKnot
+    getKnotIndex
+    getKnotMax
+    getKnotMin
+    getLastKnot
+    getLastKnotIndex
+    getLocalKnotIndexVector
+    getLocalKnotVector
+    globalFuncN
+    groupN
+    isBoundary
+    isEven
+    isInterior
+    isLeftBoundary
+    isOdd
+    isRightBoundary
+    knotGroup
+    knotGroupMult
+    knotGroupN
+    knotN
+    operator=
+    order
+    vector
+    zeroCount
+
+    Notes
+    -----
+    This class was defined in HKnotVector.h
+
+    The class is found in the "hbs" namespace
+
+In [3]: hsfpy.HForest.transformCellAcrossCorner?
+Type:       method_descriptor
+String Form:<method 'transformCellAcrossCorner' of 'hsfpy.HForest.HForest' objects>
+Docstring:
+transformCellAcrossCorner(self, trunk, corner, which, cell_idx)
+Given a trunk and corner and an index specifying which corner
+adjacency we're interested in and an index written in terms of
+the coordinate system of the trunk find the same cell in the
+coordinate system of the trunk across the corner. If operation
+is unsuccessful returns an invalid index.
+
+Parameters
+----------
+trunk : uint
+
+corner : uint
+
+which : uint
+
+cell_idx : Index
+
+Returns
+-------
+None

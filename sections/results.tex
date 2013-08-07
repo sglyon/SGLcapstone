@@ -60,12 +60,19 @@ XDress is still actively developed and does not yet support all the features of 
 
   As can be seen in the very simple example above, if the user doesn't know what methods a certain object has or what the types of a particular function's arguments are, they can easily pull up the docstrings and find out. This makes \texttt{hsfpy} much more accessible to outside users who have not been involved in the structure and development of \texttt{hsf}. Unlike  the static, complied C++ library, the Python interface invites users to explore the various data types interactively, hopefully encouraging a much quicker development for projects using \texttt{hsf}.
 
-  In the next example, I will instantiate the basic data structures of HSF and show how they can be queried to give information about the underlying objects. Again \texttt{hsfpy} is an unfinished project, but all main data structures have been wrapped. The components that are missing deal with doing the analysis on those data structures. The main object in HSF is the hierarchical spline forest, which is implemented as \texttt{HForest}. The spline forest is created from a collection of spline trees, represented in the code as \texttt{HNurbsTree}. Each of these spline trees is a collection of individual NURBS, which corresponds to the \texttt{HNurbs} class. Finally, the \texttt{HNurbs} objects are built using C++ \texttt{vector}s of \texttt{HKnotVector} objects, which represent a knot vector. Listing \ref{code:longexample} shows how these objects might be created.
+  In the next example, I will instantiate the basic data structures of HSF and show how they can be queried to give information about the underlying objects. Again \texttt{hsfpy} is an unfinished project, but all main data structures have been wrapped. The components that are missing deal with doing the analysis on those data structures. The main object in HSF is the hierarchical spline forest, which is implemented as \texttt{HForest}. The spline forest is created from a collection of spline trees, represented in the code as \texttt{HNurbsTree}. Each of these spline trees is a collection of individual NURBS, which corresponds to the \texttt{HNurbs} class. Finally, the \texttt{HNurbs} objects are built using C++ \texttt{vector}s of \texttt{HKnotVector} objects, which represent a knot vector. Listing \ref{code:longexample} shows how these objects might be created. Note that in Listing \ref{code:longexample} I print various results and objects to a file; this file appears in Listing \ref{code:longoutput}.
 
-  \begin{code}
-    x = 1
-  \end{code}
+  \setstretch{0.7}
+  \vspace{.2in}
+  \lstinputlisting[language=python, label=code:longexample, caption= Creating \texttt{hsfpy} objects.]{../code/actual/longexample.py}
+  \mainstretch{}
 
+  \setstretch{0.7}
+  \vspace{.2in}
+  \lstinputlisting[language=bash, label=code:longoutput,  numbers=none, caption= Output of data structure example]{../code/actual/longoutput.txt}
+  \mainstretch{}
+
+  As can be seen, \texttt{hsfpy} is well on its way to becoming a functional and seamless Python interface to \texttt{hsf}. In addition to wrapping the analysis portions of \texttt{hsf}, there are a few other things that could make \texttt{hsfpy} even better.  XDress allows the insertion of handwritten functions and methods into the wrapper code via sidecar files. A sidecar file is a Python file that sits along the \texttt{.h} and \texttt{.cpp} source and modifies the internal XDress representation of the objects when XDress is executed. I actually used this feature to get the \texttt{HKnotVector} instances to print nicely in the output file from the example above. In addition to aesthetic improvements, the sidecar files can be used to make the wrapped classes behave more like native Python classes. Adding things like Python indexing (through the \texttt{\_\_getitem\_\_} and \texttt{\_\_setitem\_\_} methods) and overloading standard arithmetic operators (through methods like \texttt{\_\_add\_\_}, \texttt{\_\_sub\_\_}, ect.) will allow the \texttt{hsfpy} classes to behave and feel as if they were implemented in Python initially. However, these classes will have the added benefit of C++ execution speeds and precise memory management.
 
 %%% Local Variables:
 %%% mode: latex

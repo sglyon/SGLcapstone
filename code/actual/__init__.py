@@ -10,3 +10,6 @@ from hsfpy.HForest import HForest
 from hsfpy.HNurbs import linearParameterizeNURBS
 
 
+
+# linearParameterizeNURBS(2, 3, 2, 2, 2, 4, 4, 10., 2., 2., nurbs1)
+# linearParameterizeNURBS(2, 3, 2, 2, 4, 2, 4, 10., 2., 2., nurbs2)

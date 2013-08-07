@@ -1,0 +1,24 @@
+hkv1 is
+HKnotVector
+	Degree: 1
+	Knots: [0.0, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.0]
+
+hkv2 is
+HKnotVector
+	Degree: 2
+	Knots: [0.0, 0.0, 0.0, 0.333333333333, 0.666666666667, 1.0, 1.0, 1.0]
+
+HKnotVectors of nurbs2. First should be hkv2 and second hkv1
+
+nurbs2.getKnots(0) is
+HKnotVector
+	Degree: 2
+	Knots: [0.0, 0.0, 0.0, 0.333333333333, 0.666666666667, 1.0, 1.0, 1.0]
+
+nurbs2.getKnots(1) is
+HKnotVector
+	Degree: 1
+	Knots: [0.0, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.0]
+
+Are the values of HKnotVector 2 preserved?
+True
