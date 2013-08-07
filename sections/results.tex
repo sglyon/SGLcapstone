@@ -2,11 +2,11 @@
 
 \section{Results and Discussion} \label{sec:results_and_discussion}
 
-XDress is still actively developed and does not yet support all the features of \texttt{hsf}. As such, \texttt{hsfpy} is still a work on progress. It should be noted, however, that the missing functionality in XDress is minor and should be taken care of before the end of August, 2013. At that time, it will be very easy to finish \texttt{hsfpy}. In the remainder of this section I will present the current version of \texttt{hsfpy}, including the XDress utilities needed to produce it, as well as show some preliminary usage examples.
+XDress is still actively developed and does not yet support all the features of \texttt{hsf}. As such, \texttt{hsfpy} is still a work on progress. It should be noted, however, that the missing functionality in XDress is relatively minor and should be implemented before the end of August, 2013. At that time, it will be very easy to finish \texttt{hsfpy}. In the remainder of this section I will present the current version of \texttt{hsfpy}, including the XDress utilities needed to produce it, as well as show some preliminary usage examples.
 
 \subsection{XDress and hsfpy} \label{sub:xdress_and_hsfpy}
 
-  All instructions needed to create \texttt{hsfpy} are contained in a single \texttt{xdressrc.py} file, which I give below in Listing \ref{code:actualxdressrc}. This the actual file used in development as of August 5, 2013. After presenting the file I will explain key parts.
+  All instructions needed to create \texttt{hsfpy} are contained in a single \texttt{xdressrc.py} file, which I give below in Listing \ref{code:actualxdressrc}. This is the actual file used in development as of August 5, 2013. After presenting the file I will explain key parts.
 
   \setstretch{0.7}
   \vspace{.2in}
@@ -51,7 +51,21 @@ XDress is still actively developed and does not yet support all the features of 
 
 \subsection{hsfpy Usage} \label{sub:hsfpy_usage}
 
-  Although \texttt{hsfpy} is not entirely finished, there is still a usable subset of \texttt{hsf} available at the time of writing. The basic data structure in \texttt{hsf} is the hierarchical spline forest, which is implemented as \texttt{HForest} and has already been wrapped in \texttt{hsfpy}.
+  Although \texttt{hsfpy} is not entirely finished,  there are still some features I can demonstrate that will highlight its functionality.  The first usage example I will provide shows the interactive documentation capabilities automatically built in to \texttt{hsfpy} via the \texttt{xdress.doxygen} plugin.  As noted earlier, the plugin will have dOxygen scan the C++ source for inline documentation included as comments. These comments are then parsed, formatted, and put into the wrapper as stylized Python docstrings.  The docstrings for functions contain the order and type of all input and output arguments and any brief description provided in the source. Additionally, the docstrings for classes contain the basic description of the class as well as a list of all attributes and methods of the class. The content of these docstrings can be accessed interpreter using the \texttt{help} function, directly as a python \texttt{str} from the \texttt{\_\_doc\_\_} attribute of a function or class, or using the \texttt{?} IPython dynamic introspection operator.  Below I have included the content of a sample IPython session.
+
+  \setstretch{0.7}
+  \vspace{.2in}
+  \lstinputlisting[language=bash, label=code:actualipython, caption= Sample IPython showing docstrings in \texttt{hsfpy}]{../code/actual/ipy_session.txt}
+  \mainstretch{}
+
+  As can be seen in the very simple example above, if the user doesn't know what methods a certain object has or what the types of a particular function's arguments are, they can easily pull up the docstrings and find out. This makes \texttt{hsfpy} much more accessible to outside users who have not been involved in the structure and development of \texttt{hsf}. Unlike  the static, complied C++ library, the Python interface invites users to explore the various data types interactively, hopefully encouraging a much quicker development for projects using \texttt{hsf}.
+
+  In the next example, I will instantiate the basic data structures of HSF and show how they can be queried to give information about the underlying objects. Again \texttt{hsfpy} is an unfinished project, but all main data structures have been wrapped. The components that are missing deal with doing the analysis on those data structures. The main object in HSF is the hierarchical spline forest, which is implemented as \texttt{HForest}. The spline forest is created from a collection of spline trees, represented in the code as \texttt{HNurbsTree}. Each of these spline trees is a collection of individual NURBS, which corresponds to the \texttt{HNurbs} class. Finally, the \texttt{HNurbs} objects are built using C++ \texttt{vector}s of \texttt{HKnotVector} objects, which represent a knot vector. Listing \ref{code:longexample} shows how these objects might be created.
+
+  \begin{code}
+    x = 1
+  \end{code}
+
 
 %%% Local Variables:
 %%% mode: latex
