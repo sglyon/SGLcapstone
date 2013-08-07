@@ -48,8 +48,6 @@ XDress is still actively developed and does not yet support all the features of 
 
   In the next example, I will instantiate the basic data structures of HSF and show how they can be queried to give information about the underlying objects. Again \texttt{hsfpy} is an unfinished project, but most main data structures have been wrapped. The components that are missing deal with doing the analysis on those data structures. The main object in HSF is the hierarchical spline forest, which is implemented as \texttt{HForest}. The spline forest is created from a collection of spline trees, represented in the code as \texttt{HNurbsTree}. Each of these spline trees is a collection of individual NURBS, which corresponds to the \texttt{HNurbs} class. Finally, the \texttt{HNurbs} objects are built using C++ \texttt{vector}s of \texttt{HKnotVector} objects, which represent a knot vector. Listing \ref{code:longexample} shows how these objects might be created. Note that in Listing \ref{code:longexample} I print various results and objects to a file; this file appears in Listing \ref{code:longoutput}.
 
-\REVIEW{The second knot vector needs to be obtained by subdividing the previous vector (the first entries would be [0, 0, 0, 0.1, 0.2, ...]).  This is a (currently) an assumption of an hsf HForest.}
-
   \setstretch{0.7}
   \vspace{.2in}
   \lstinputlisting[language=python, label=code:longexample, caption= Creating \texttt{hsfpy} objects.]{../code/actual/longexample.py}

@@ -1,3 +1,5 @@
+########################################################################
+Verifying consistency of two methods of creating HNurbs
 hkv1 is
 HKnotVector
 	Degree: 1
@@ -9,7 +11,6 @@ HKnotVector
 	Knots: [0.0, 0.0, 0.0, 0.333333333333, 0.666666666667, 1.0, 1.0, 1.0]
 
 HKnotVectors of nurbs2. First should be hkv2 and second hkv1
-
 nurbs2.getKnots(0) is
 HKnotVector
 	Degree: 2
@@ -20,5 +21,20 @@ HKnotVector
 	Degree: 1
 	Knots: [0.0, 0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.0]
 
+########################################################################
+HKnotVectors in second level HNurbs
+
+hkv3 is
+HKnotVector
+	Degree: 1
+	Knots: [0.0, 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.0]
+
+hkv4 is
+HKnotVector
+	Degree: 2
+	Knots: [0.0, 0.0, 0.0, 0.166666666667, 0.333333333333, 0.5, 0.666666666667, 0.833333333333, 1.0, 1.0, 1.0]
+
+########################################################################
+Creating HNurbsTree and HForest. Then testing integrity of underlying HKnotVectors
 Are the values of HKnotVector 2 preserved?
 True
