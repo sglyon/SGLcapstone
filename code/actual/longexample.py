@@ -14,7 +14,16 @@ print(msg.format('hkv2', repr(hkv2)), file=f)
 
 ## Create HNurbs
 nurbs1 = HNurbs([hkv1, hkv2])
-nurbs2 = HNurbs()
+
+## Now create NURBS for the next level in the hierarchy
+## The knot vectors are obtained by subdividing the nonzero segments in the previous set
+knots1 = [0.0, 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.0]
+knots2 = [0.0, 0.0, 0.0, 1./6, 1./3, 1./2, 2./3, 5./6, 1.0, 1.0, 1.0]
+hkv1 = HKnotVector(1, knots1)
+hkv2 = HKnotVector(2, knots2)
+print(msg.format('hkv1', repr(hkv1)), file=f)
+print(msg.format('hkv2', repr(hkv2)), file=f)
+nurbs2 = HNurbs([hkv1,hkv2])
 
 # Note linearParameterizeNURBS makes nurbs2 = HNurbs([hkv2, hkv1])
 linearParameterizeNURBS(2, 3, 2, 2, 2, 4, 4, 10., 2., 2., nurbs2)
