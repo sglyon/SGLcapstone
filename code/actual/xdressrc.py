@@ -40,28 +40,25 @@ stlcontainers = [
     ('vector', 'int32'),  # IntVec
     ('vector', ('vector', 'int32')),  # IntVecVec
     ('vector', ('vector', 'float64')),   # DoubleVecVec
-    ('vector', 'HKnotVector'),
-    ('vector', ('Point', 3, 'double', False)),
-    ('vector', ('Point', 3, 'double', True)),
+    ('vector', 'HKnotVector'),  # vector< HKnotVector >
+    ('vector', ('Point', 3, 'double', False)),  # vector< Point3d >
+    ('vector', ('Point', 3, 'double', True)),  # vector< APoint3d >
 ]
 
 variables = [
-    ('Activity', 'common'),
-    ('MeshType', 'HMesh')
+    ('Activity', 'common'),  # Activity enum
+    ('MeshType', 'HMesh')  # MeshType enum
 ]
 
 ## Which classes to create wrappers for.
 classes = [
     ('HKnotVector', 'HKnotVector'),
-    (('Point', 3, 'double', False), 'Point'),
-    (('Point', 3, 'double', True), 'Point'),
+    (('Point', 3, 'double', False), 'Point', 'Point', 'APoint3d'),
+    (('Point', 3, 'double', True), 'Point', 'Point', 'Point3d'),
     ('HNurbs', 'HNurbs'),
     ('Index', 'common'),
     ('HNurbsTree', 'HNurbsTree'),
     ('HForest', 'HForest'),
-    # ('FnHAdapt', 'FnHAdapt'),
-    # ('HExtract', 'HExtract'),
-    # (('HMesh', 'CELL_TYPE'), 'HMesh')
 ]
 
 ## Which functions to create wrappers for
